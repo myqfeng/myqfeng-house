@@ -1,10 +1,113 @@
 ---
 import BaseLayout from '@/components/layout/BaseLayout.astro';
+import SearchBox from '@/components/ui/SearchBox.astro';
+import Pagination from '@/components/ui/Pagination.astro';
+import PostList from '@/components/widgets/PostList.astro';
+import { resourceTypes, siteConfig } from '@/data/site';
+import { getPosts, getResourceTypeCounts } from '@/utils/content';
+
+const posts = await getPosts();
+const counts = await getResourceTypeCounts();
+const totalPages = Math.ceil(posts.length / siteConfig.pageSize);
 ---
 
-<BaseLayout title="文章" description="文章与转载内容列表">
-  <section class="mx-auto max-w-4xl px-4 py-16 text-center">
-    <h1 class="mb-4 text-3xl font-bold text-moon-50">文章列表建设中</h1>
-    <p class="text-moon-300">后续任务会在这里展示原创文章、转载文章、分类筛选和搜索。</p>
+<BaseLayout title="文章" description="浏览所有原创文章和转载文章">
+  <section class="mx-auto max-w-7xl px-4 py-12">
+    <h1 class="mb-8 text-3xl font-bold text-moon-50">文章列表</h1>
+
+    <div class="mb-6 flex flex-wrap gap-2">
+      <a href="/posts" data-type-filter="all" class="rounded-full bg-sky-bright px-4 py-1.5 text-sm font-medium text-moon-900 transition">
+        全部 ({posts.length})
+      </a>
+      {resourceTypes.map((type) => (
+        <a href={`/posts?type=${type.id}`} data-type-filter={type.id} class="rounded-full bg-moon-800 px-4 py-1.5 text-sm font-medium text-moon-200 transition hover:bg-moon-700">
+          {type.name} ({counts[type.id] || 0})
+        </a>
+      ))}
+    </div>
+
+    <div class="mb-8">
+      <SearchBox placeholder="搜索文章标题、描述或标签..." />
+    </div>
+
+    <PostList posts={posts} />
+    <p class="hidden py-12 text-center text-moon-300" data-empty-state>暂时没有符合条件的文章。</p>
+
+    <Pagination currentPage={1} totalPages={totalPages} baseUrl="/posts" />
   </section>
 </BaseLayout>
+
+<script is:inline define:vars={{ pageSize: siteConfig.pageSize, validTypes: resourceTypes.map((type) => type.id) }}>
+  const params = new URLSearchParams(window.location.search);
+  const cards = Array.from(document.querySelectorAll('[data-searchable]'));
+  const filters = Array.from(document.querySelectorAll('[data-type-filter]'));
+  const input = document.getElementById('search');
+  const pagination = document.querySelector('[data-pagination]');
+  const emptyState = document.querySelector('[data-empty-state]');
+  const activeClass = ['bg-sky-bright', 'text-moon-900'];
+  const inactiveClass = ['bg-moon-800', 'text-moon-200', 'hover:bg-moon-700'];
+
+  function pageHref(type, page) {
+    const next = new URLSearchParams();
+    if (type !== 'all') next.set('type', type);
+    if (page > 1) next.set('page', String(page));
+    const query = next.toString();
+    return query ? `/posts?${query}` : '/posts';
+  }
+
+  function renderPagination(type, currentPage, totalPages) {
+    if (!pagination) return;
+    pagination.classList.toggle('hidden', totalPages <= 1);
+    pagination.innerHTML = '';
+    if (totalPages <= 1) return;
+
+    const pages = [];
+    if (currentPage > 1) pages.push({ label: '上一页', page: currentPage - 1 });
+    for (let page = 1; page <= totalPages; page += 1) pages.push({ label: String(page), page });
+    if (currentPage < totalPages) pages.push({ label: '下一页', page: currentPage + 1 });
+
+    pages.forEach(({ label, page }) => {
+      const link = document.createElement('a');
+      const isCurrent = page === currentPage && label === String(page);
+      link.href = pageHref(type, page);
+      link.textContent = label;
+      link.className = `rounded-lg px-4 py-2 ${isCurrent ? 'bg-sky-bright text-moon-900' : 'bg-moon-800 text-moon-200 hover:bg-moon-700 hover:text-sky-glow'}`;
+      if (isCurrent) link.setAttribute('aria-current', 'page');
+      pagination.append(link);
+    });
+  }
+
+  function applyState() {
+    const rawType = params.get('type') || 'all';
+    const type = validTypes.includes(rawType) ? rawType : 'all';
+    const search = input?.value.toLowerCase().trim() || '';
+    const matchingCards = cards.filter((card) => {
+      const matchesType = type === 'all' || card.getAttribute('data-type') === type;
+      const text = card.getAttribute('data-searchable')?.toLowerCase() || '';
+      return matchesType && text.includes(search);
+    });
+    const totalPages = Math.ceil(matchingCards.length / pageSize);
+    const requestedPage = Number.parseInt(params.get('page') || '1', 10);
+    const currentPage = Math.min(Math.max(Number.isNaN(requestedPage) ? 1 : requestedPage, 1), Math.max(totalPages, 1));
+    const firstIndex = (currentPage - 1) * pageSize;
+    const visibleCards = new Set(matchingCards.slice(firstIndex, firstIndex + pageSize));
+
+    cards.forEach((card) => card.classList.toggle('hidden', !visibleCards.has(card)));
+    emptyState?.classList.toggle('hidden', matchingCards.length > 0);
+
+    filters.forEach((filter) => {
+      const isActive = filter.getAttribute('data-type-filter') === type;
+      filter.classList.toggle(activeClass[0], isActive);
+      filter.classList.toggle(activeClass[1], isActive);
+      inactiveClass.forEach((className) => filter.classList.toggle(className, !isActive));
+    });
+
+    renderPagination(type, currentPage, totalPages);
+  }
+
+  input?.addEventListener('input', () => {
+    params.delete('page');
+    applyState();
+  });
+  applyState();
+</script>

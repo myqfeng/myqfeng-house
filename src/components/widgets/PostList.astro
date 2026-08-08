@@ -1,0 +1,18 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import PostCard from '@/components/layout/PostCard.astro';
+
+interface Props {
+  posts: CollectionEntry<'posts'>[];
+}
+
+const { posts } = Astro.props;
+---
+
+<div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+  {posts.map((post) => (
+    <div data-type={post.data.type} data-searchable={`${post.data.title} ${post.data.description} ${post.data.tags.join(' ')}`}>
+      <PostCard post={post} />
+    </div>
+  ))}
+</div>

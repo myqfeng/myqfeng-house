@@ -1,0 +1,36 @@
+---
+interface Props {
+  currentPage: number;
+  totalPages: number;
+  baseUrl: string;
+}
+
+const { currentPage, totalPages, baseUrl } = Astro.props;
+const pageUrl = (page: number) => `${baseUrl}${baseUrl.includes('?') ? '&' : '?'}page=${page}`;
+---
+
+<nav class={`flex justify-center gap-2 py-8 ${totalPages > 1 ? '' : 'hidden'}`} aria-label="文章分页" data-pagination data-base-url={baseUrl}>
+  {totalPages > 1 && (
+    <>
+    {currentPage > 1 && (
+      <a href={pageUrl(currentPage - 1)} class="rounded-lg bg-moon-800 px-4 py-2 text-moon-200 hover:bg-moon-700 hover:text-sky-glow">
+        上一页
+      </a>
+    )}
+    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+      <a
+        href={pageUrl(page)}
+        aria-current={page === currentPage ? 'page' : undefined}
+        class={`rounded-lg px-4 py-2 ${page === currentPage ? 'bg-sky-bright text-moon-900' : 'bg-moon-800 text-moon-200 hover:bg-moon-700 hover:text-sky-glow'}`}
+      >
+        {page}
+      </a>
+    ))}
+    {currentPage < totalPages && (
+      <a href={pageUrl(currentPage + 1)} class="rounded-lg bg-moon-800 px-4 py-2 text-moon-200 hover:bg-moon-700 hover:text-sky-glow">
+        下一页
+      </a>
+    )}
+    </>
+  )}
+</nav>
