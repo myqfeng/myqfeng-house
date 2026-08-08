@@ -44,4 +44,5 @@ Relevant output:
 ## Follow-up Fix
 
 - Addressed reviewer findings by making the homepage title read from `src/data/site.ts` instead of hardcoding the value, and by changing `src/styles/global.css` to keep dark mode as the default while exposing an `html.light` override for the light theme.
+- Added an `html.system` theme path that follows `prefers-color-scheme`, and updated `astro.config.mjs` to consume `siteConfig.siteUrl` so the site URL has one configuration source.
 - Re-ran `pnpm build` after the fix; build still succeeded with 1 page generated and no errors.
