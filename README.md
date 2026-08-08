@@ -195,7 +195,7 @@ navLinks: [
 
 ### 修改分类体系
 
-`resourceTypes` 数组定义了文章的全部分类（`id` 与文章 frontmatter 中的 `type` 对应）。**增删分类后请同步修改 `src/content/config.ts` 中 posts 集合的 `type` 枚举**，并重新运行 `pnpm dev` / `pnpm build`。
+`resourceTypes` 数组定义了文章的全部分类（`id` 与文章 frontmatter 中的 `type` 对应）。**增删分类后请同步修改 `src/content.config.ts` 中 posts 集合的 `type` 枚举**，并重新运行 `pnpm dev` / `pnpm build`。
 
 ### 关于页内容
 
