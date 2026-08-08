@@ -26,7 +26,6 @@ const resources = defineCollection({
     title: z.string(),
     description: z.string().default(''),
     published: z.date(),
-    type: z.enum(resourceTypeIds).default('tool'),
     downloadType: z.enum(['link', 'pan', 'github']).default('link'),
     url: z.string(),
     extractCode: z.string().optional(),

@@ -2,55 +2,89 @@
 import BaseLayout from '@/components/layout/BaseLayout.astro';
 import SearchBox from '@/components/ui/SearchBox.astro';
 import ResourceCard from '@/components/layout/ResourceCard.astro';
-import Pagination from '@/components/ui/Pagination.astro';
-import { getResources, getResourceTypeCounts } from '@/utils/content';
-import { resourceTypes, siteConfig } from '@/data/site';
+import { getResources, getResourceTags } from '@/utils/content';
 
 const resources = await getResources();
-const counts = await getResourceTypeCounts();
-
-const url = new URL(Astro.request.url);
-const currentType = url.searchParams.get('type') || 'all';
-const currentPage = Math.max(1, parseInt(url.searchParams.get('page') || '1', 10));
-
-const filteredResources = currentType === 'all'
-  ? resources
-  : resources.filter((r) => r.data.type === currentType);
-
-const totalPages = Math.ceil(filteredResources.length / siteConfig.pageSize);
-const paginatedResources = filteredResources.slice(
-  (currentPage - 1) * siteConfig.pageSize,
-  currentPage * siteConfig.pageSize
-);
+const tagCounts = await getResourceTags();
+const tags = Object.keys(tagCounts).sort((a, b) => tagCounts[b] - tagCounts[a]);
 ---
 
 <BaseLayout title="资源下载" description="精选学习资源下载链接">
   <section class="mx-auto max-w-7xl px-4 py-12">
     <h1 class="mb-8 text-3xl font-bold text-moon-50">资源下载</h1>
 
-    <div class="mb-6 flex flex-wrap gap-2">
-      <a href="/resources" class={`rounded-full px-4 py-1.5 text-sm font-medium transition ${currentType === 'all' ? 'bg-sky-bright text-moon-900' : 'bg-moon-800 text-moon-200 hover:bg-moon-700'}`}>
-        全部 ({resources.length})
-      </a>
-      {resourceTypes.map((type) => (
-        <a href={`/resources?type=${type.id}`} class={`rounded-full px-4 py-1.5 text-sm font-medium transition ${currentType === type.id ? 'bg-sky-bright text-moon-900' : 'bg-moon-800 text-moon-200 hover:bg-moon-700'}`}>
-          {type.name} ({counts[type.id] || 0})
-        </a>
-      ))}
-    </div>
+    {tags.length > 0 && (
+      <div class="mb-6 flex flex-wrap gap-2">
+        <button type="button" data-tag-filter="all" class="rounded-full bg-sky-bright px-4 py-1.5 text-sm font-medium text-moon-900 transition">
+          全部 ({resources.length})
+        </button>
+        {tags.map((tag) => (
+          <button type="button" data-tag-filter={tag} class="rounded-full bg-moon-800 px-4 py-1.5 text-sm font-medium text-moon-200 transition hover:bg-moon-700">
+            {tag} ({tagCounts[tag]})
+          </button>
+        ))}
+      </div>
+    )}
 
     <div class="mb-8">
       <SearchBox id="resource-search" placeholder="搜索资源标题、描述或标签..." label="搜索资源" />
     </div>
 
     <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3" id="resource-grid">
-      {paginatedResources.map((resource) => (
-        <div data-searchable={`${resource.data.title} ${resource.data.description} ${resource.data.tags.join(' ')}`}>
+      {resources.map((resource) => (
+        <div data-tags={resource.data.tags.join(' ')} data-searchable={`${resource.data.title} ${resource.data.description} ${resource.data.tags.join(' ')}`}>
           <ResourceCard resource={resource} />
         </div>
       ))}
     </div>
 
-    <Pagination currentPage={currentPage} totalPages={totalPages} baseUrl={`/resources?type=${currentType}`} />
+    {resources.length === 0 && (
+      <p class="py-12 text-center text-moon-300">暂无资源。</p>
+    )}
   </section>
 </BaseLayout>
+
+<script is:inline>
+  const cards = Array.from(document.querySelectorAll('#resource-grid [data-tags]'));
+  const tagFilters = Array.from(document.querySelectorAll('[data-tag-filter]'));
+  const input = document.getElementById('resource-search');
+  const emptyState = document.createElement('p');
+  emptyState.className = 'py-12 text-center text-moon-300';
+  emptyState.textContent = '没有找到符合条件的资源。';
+  emptyState.hidden = true;
+  document.getElementById('resource-grid')?.after(emptyState);
+
+  const activeClass = ['bg-sky-bright', 'text-moon-900'];
+  const inactiveClass = ['bg-moon-800', 'text-moon-200', 'hover:bg-moon-700'];
+
+  function applyState() {
+    const selectedTag = tagFilters.find((button) => button.classList.contains('bg-sky-bright'))?.getAttribute('data-tag-filter') || 'all';
+    const search = input?.value.toLowerCase().trim() || '';
+    let visible = 0;
+
+    cards.forEach((card) => {
+      const tags = (card.getAttribute('data-tags') || '').toLowerCase();
+      const text = card.getAttribute('data-searchable')?.toLowerCase() || '';
+      const matchesTag = selectedTag === 'all' || tags.split(' ').includes(selectedTag);
+      const matchesSearch = text.includes(search);
+      const show = matchesTag && matchesSearch;
+      card.classList.toggle('hidden', !show);
+      if (show) visible += 1;
+    });
+
+    emptyState.hidden = visible > 0;
+  }
+
+  tagFilters.forEach((button) => {
+    button.addEventListener('click', () => {
+      tagFilters.forEach((other) => {
+        other.classList.toggle(activeClass[0], other === button);
+        other.classList.toggle(activeClass[1], other === button);
+        inactiveClass.forEach((className) => other.classList.toggle(className, other !== button));
+      });
+      applyState();
+    });
+  });
+
+  input?.addEventListener('input', applyState);
+</script>

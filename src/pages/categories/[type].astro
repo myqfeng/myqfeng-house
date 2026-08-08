@@ -2,10 +2,9 @@
 import type { GetStaticPaths } from 'astro';
 import BaseLayout from '@/components/layout/BaseLayout.astro';
 import PostCard from '@/components/layout/PostCard.astro';
-import ResourceCard from '@/components/layout/ResourceCard.astro';
 import { getResourceTypeById, resourceTypes } from '@/data/site';
 import type { ResourceType } from '@/types';
-import { getPostsByType, getResourcesByType } from '@/utils/content';
+import { getPostsByType } from '@/utils/content';
 
 export const getStaticPaths = (async () => {
   return resourceTypes.map((type) => ({ params: { type: type.id }, props: { typeId: type.id } }));
@@ -18,7 +17,6 @@ if (!typeInfo) {
 }
 
 const posts = await getPostsByType(typeId as ResourceType);
-const resources = await getResourcesByType(typeId as ResourceType);
 
 const iconPaths: Record<string, string[]> = {
   'lucide:book-open': ['M12 7v14', 'M3 5.5A2.5 2.5 0 0 1 5.5 3H12v18H5.5A2.5 2.5 0 0 1 3 18.5z', 'M21 5.5A2.5 2.5 0 0 0 18.5 3H12v18h6.5a2.5 2.5 0 0 0 2.5-2.5z'],
@@ -45,7 +43,7 @@ const iconPaths: Record<string, string[]> = {
     </div>
 
     {posts.length > 0 && (
-      <div class="mb-12">
+      <div>
         <h2 class="mb-6 text-xl font-semibold text-moon-50">文章</h2>
         <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {posts.map((post) => <PostCard post={post} />)}
@@ -53,17 +51,8 @@ const iconPaths: Record<string, string[]> = {
       </div>
     )}
 
-    {resources.length > 0 && (
-      <div>
-        <h2 class="mb-6 text-xl font-semibold text-moon-50">资源</h2>
-        <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {resources.map((resource) => <ResourceCard resource={resource} />)}
-        </div>
-      </div>
-    )}
-
-    {posts.length === 0 && resources.length === 0 && (
-      <p class="text-moon-300">该分类下暂无内容。</p>
+    {posts.length === 0 && (
+      <p class="text-moon-300">该分类下暂无文章。</p>
     )}
   </section>
 </BaseLayout>

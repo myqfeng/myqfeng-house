@@ -1,9 +1,9 @@
 ---
 import BaseLayout from '@/components/layout/BaseLayout.astro';
 import { resourceTypes } from '@/data/site';
-import { getCombinedTypeCounts } from '@/utils/content';
+import { getPostTypeCounts } from '@/utils/content';
 
-const counts = await getCombinedTypeCounts();
+const counts = await getPostTypeCounts();
 
 const iconPaths: Record<string, string[]> = {
   'lucide:book-open': ['M12 7v14', 'M3 5.5A2.5 2.5 0 0 1 5.5 3H12v18H5.5A2.5 2.5 0 0 1 3 18.5z', 'M21 5.5A2.5 2.5 0 0 0 18.5 3H12v18h6.5a2.5 2.5 0 0 0 2.5-2.5z'],

@@ -4,9 +4,9 @@ import Hero from '@/components/layout/Hero.astro';
 import CategoryGrid from '@/components/widgets/CategoryGrid.astro';
 import PostCard from '@/components/layout/PostCard.astro';
 import ResourceCard from '@/components/layout/ResourceCard.astro';
-import { getPosts, getResources, getResourceTypeCounts } from '@/utils/content';
+import { getPosts, getResources, getPostTypeCounts } from '@/utils/content';
 
-const counts = await getResourceTypeCounts();
+const counts = await getPostTypeCounts();
 const posts = await getPosts();
 const resources = await getResources();
 const latestPosts = posts.slice(0, 3);

@@ -23,11 +23,6 @@ export async function getPostsByType(type: ResourceType) {
   return posts.filter((p) => p.data.type === type);
 }
 
-export async function getResourcesByType(type: ResourceType) {
-  const resources = await getResources();
-  return resources.filter((r) => r.data.type === type);
-}
-
 export async function getPostTypeCounts() {
   const posts = await getPosts();
   const counts: Record<ResourceType, number> = {
@@ -46,42 +41,14 @@ export async function getPostTypeCounts() {
   return counts;
 }
 
-export async function getResourceTypeCounts() {
+export async function getResourceTags() {
   const resources = await getResources();
-  const counts: Record<ResourceType, number> = {
-    tutorial: 0,
-    tool: 0,
-    ebook: 0,
-    video: 0,
-    note: 0,
-    opensource: 0,
-  };
+  const counts: Record<string, number> = {};
 
   for (const resource of resources) {
-    counts[resource.data.type as ResourceType]++;
-  }
-
-  return counts;
-}
-
-export async function getCombinedTypeCounts() {
-  const posts = await getPosts();
-  const resources = await getResources();
-  const counts: Record<ResourceType, number> = {
-    tutorial: 0,
-    tool: 0,
-    ebook: 0,
-    video: 0,
-    note: 0,
-    opensource: 0,
-  };
-
-  for (const post of posts) {
-    counts[post.data.type as ResourceType]++;
-  }
-
-  for (const resource of resources) {
-    counts[resource.data.type as ResourceType]++;
+    for (const tag of resource.data.tags) {
+      counts[tag] = (counts[tag] || 0) + 1;
+    }
   }
 
   return counts;

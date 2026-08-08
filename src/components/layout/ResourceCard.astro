@@ -1,6 +1,5 @@
 ---
 import type { CollectionEntry } from 'astro:content';
-import { getResourceTypeById } from '@/data/site';
 import { formatDate } from '@/utils/format';
 
 interface Props {
@@ -8,7 +7,6 @@ interface Props {
 }
 
 const { resource } = Astro.props;
-const typeInfo = getResourceTypeById(resource.data.type);
 const downloadLabel = {
   link: '前往下载',
   pan: '网盘下载',
@@ -17,9 +15,6 @@ const downloadLabel = {
 ---
 
 <article class="glass-card flex flex-col p-6 transition hover:-translate-y-1 hover:border-sky-bright/50">
-  <div class="mb-3 flex items-center gap-2">
-    <span class="text-xs font-medium text-sky-glow">{typeInfo?.name}</span>
-  </div>
   <h3 class="mb-2 text-xl font-semibold text-moon-50">{resource.data.title}</h3>
   <p class="mb-4 line-clamp-2 flex-1 text-sm text-moon-300">{resource.data.description}</p>
   <div class="mb-4 flex flex-wrap gap-2">
