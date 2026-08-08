@@ -1,4 +1,5 @@
 ---
+import '@/styles/global.css';
 const title = '明月清风的小屋';
 ---
 
@@ -8,13 +9,8 @@ const title = '明月清风的小屋';
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
-    <style is:global>
-      @tailwind base;
-      @tailwind components;
-      @tailwind utilities;
-    </style>
   </head>
-  <body class="flex min-h-screen items-center justify-center bg-moon-900 font-sans text-moon-100">
+  <body class="flex min-h-screen items-center justify-center font-sans">
     <main class="text-center">
       <h1 class="mb-4 text-4xl font-bold text-sky-bright">{title}</h1>
       <p class="text-moon-300">Astro 5 + Tailwind CSS 3 项目骨架已就绪</p>
