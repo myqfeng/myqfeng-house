@@ -1,0 +1,64 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+  eyebrow?: string;
+  meta?: string;
+  tags?: string[];
+  center?: boolean;
+}
+
+const { title, description, eyebrow, meta, tags = [], center = false } = Astro.props;
+---
+
+<header class={`page-header ${center ? 'items-center text-center' : ''} mb-10`}>
+  {eyebrow && (
+    <p class="page-header-eyebrow mb-3 font-mono text-xs tracking-[0.3em] text-sky-glow">
+      {eyebrow}
+    </p>
+  )}
+  <h1 class="page-header-title text-3xl font-bold text-moon-50 md:text-4xl">{title}</h1>
+  {description && <p class="page-header-desc mt-3 text-lg text-moon-300">{description}</p>}
+  {meta && <p class="page-header-meta mt-3 text-sm text-sky-glow">{meta}</p>}
+  {tags.length > 0 && (
+    <div class="page-header-tags mt-4 flex flex-wrap gap-2">
+      {tags.map((tag) => (
+        <span class="rounded-full bg-moon-800 px-3 py-1 text-xs text-moon-300">{tag}</span>
+      ))}
+    </div>
+  )}
+</header>
+
+<style is:global>
+  .page-header {
+    display: flex;
+    flex-direction: column;
+  }
+  .page-header-eyebrow {
+    opacity: 0;
+    animation: fade-up 0.7s 0.1s forwards;
+  }
+  .page-header-title {
+    opacity: 0;
+    animation: fade-up 0.8s 0.2s forwards;
+  }
+  .page-header-desc,
+  .page-header-meta {
+    opacity: 0;
+    animation: fade-up 0.8s 0.35s forwards;
+  }
+  .page-header-tags {
+    opacity: 0;
+    animation: fade-up 0.8s 0.45s forwards;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .page-header-eyebrow,
+    .page-header-title,
+    .page-header-desc,
+    .page-header-meta,
+    .page-header-tags {
+      opacity: 1;
+      animation: none;
+    }
+  }
+</style>
