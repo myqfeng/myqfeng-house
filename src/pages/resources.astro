@@ -15,7 +15,7 @@ const tags = Object.keys(tagCounts).sort((a, b) => tagCounts[b] - tagCounts[a]);
     <PageHeader title="资源下载" />
 
     {tags.length > 0 && (
-      <div class="mb-6 flex flex-wrap gap-2">
+      <div class="reveal mb-6 flex flex-wrap gap-2" style="--reveal-delay: 0ms">
         <button type="button" data-tag-filter="all" class="rounded-full bg-sky-bright px-4 py-1.5 text-sm font-medium text-moon-900 transition">
           全部 ({resources.length})
         </button>
@@ -32,8 +32,8 @@ const tags = Object.keys(tagCounts).sort((a, b) => tagCounts[b] - tagCounts[a]);
     </div>
 
     <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3" id="resource-grid">
-      {resources.map((resource) => (
-        <div data-tags={resource.data.tags.join(' ')} data-searchable={`${resource.data.title} ${resource.data.description} ${resource.data.tags.join(' ')}`}>
+      {resources.map((resource, index) => (
+        <div class="reveal" style={`--reveal-delay: ${index * 60}ms`} data-tags={resource.data.tags.join(' ')} data-searchable={`${resource.data.title} ${resource.data.description} ${resource.data.tags.join(' ')}`}>
           <ResourceCard resource={resource} />
         </div>
       ))}

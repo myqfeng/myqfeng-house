@@ -25,7 +25,7 @@ const iconPaths: Record<string, string[]> = {
   <section class="mx-auto max-w-7xl px-4 py-12">
     <PageHeader title="文章" />
 
-    <div class="mb-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+    <div class="reveal mb-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6" style="--reveal-delay: 0ms">
       <a href="/posts" data-type-filter="all" class="glass-card group flex flex-col items-center gap-2 p-4 text-center transition hover:-translate-y-1 hover:border-sky-bright/50">
         <span class="text-lg font-semibold text-moon-50 group-hover:text-sky-glow">全部</span>
         <span class="text-sm text-moon-300">{posts.length} 篇</span>
