@@ -42,14 +42,19 @@ const { starCount = 140, meteorInterval = 4000 } = Astro.props;
     }
 
     function initStars() {
-      const count = Math.floor((starCount * width * height) / (1920 * 1080)) + 60;
+      const count = Math.floor((starCount * width * height) / (1920 * 1080)) + 80;
       stars = Array.from({ length: count }, () => ({
         x: Math.random() * width,
         y: Math.random() * height,
-        r: rand(0.4, 1.6),
+        // 半径更大更明显，约 15% 的大星带光晕
+        r: rand(0.8, 2.4),
+        glow: Math.random() < 0.15,
+        // 只有约 1/4 的星星缓慢闪烁，其余恒定亮度
+        twinkler: Math.random() < 0.25,
         phase: Math.random() * Math.PI * 2,
-        speed: rand(0.008, 0.03),
-        opacity: rand(0.2, 0.9),
+        // 呼吸频率：周期约 26-78 秒，非常缓慢
+        speed: rand(0.00008, 0.00024),
+        opacity: rand(0.55, 1),
         hue: Math.random() < 0.85 ? 0 : rand(200, 230),
       }));
     }
@@ -67,8 +72,25 @@ const { starCount = 140, meteorInterval = 4000 } = Astro.props;
 
     function drawStars(t) {
       for (const star of stars) {
-        const twinkle = 0.55 + 0.45 * Math.sin(t * star.speed * 60 + star.phase);
+        // 仅小部分星星缓慢呼吸，幅度收窄，不晃眼
+        const twinkle = star.twinkler ? 0.78 + 0.22 * Math.sin(t * star.speed + star.phase) : 1;
         const alpha = star.opacity * twinkle;
+
+        if (star.glow) {
+          // 大星：先画一圈柔光，再画亮核
+          const glow = ctx.createRadialGradient(star.x, star.y, 0, star.x, star.y, star.r * 3.2);
+          if (star.hue > 0) {
+            glow.addColorStop(0, `hsla(${star.hue}, 90%, 82%, ${0.35 * alpha})`);
+          } else {
+            glow.addColorStop(0, `rgba(248, 250, 252, ${0.35 * alpha})`);
+          }
+          glow.addColorStop(1, 'rgba(248, 250, 252, 0)');
+          ctx.fillStyle = glow;
+          ctx.beginPath();
+          ctx.arc(star.x, star.y, star.r * 3.2, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
         ctx.beginPath();
         ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
         if (star.hue > 0) {
