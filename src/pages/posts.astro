@@ -36,8 +36,8 @@ const iconPaths: Record<string, string[]> = {
   <section class="mx-auto max-w-7xl px-4 py-12">
     <div class="radial-wrap" data-radial-nav>
       <a href="/posts?type=all" class="radial-center">
-        <span class="text-lg font-bold text-moon-900">所有文章</span>
-        <span class="text-xs text-moon-700">共 {posts.length} 篇</span>
+        <span class="text-xl font-bold text-moon-900">所有文章</span>
+        <span class="text-sm text-moon-700">共 {posts.length} 篇</span>
       </a>
       {radialButtons.map((button) => (
         <a
@@ -45,12 +45,12 @@ const iconPaths: Record<string, string[]> = {
           class="radial-btn glass-card"
           style={`--tx: ${button.tx}px; --ty: ${button.ty}px; --reveal-delay: ${button.delay}`}
         >
-          <svg class="h-7 w-7 text-sky-glow" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <svg class="h-8 w-8 text-sky-glow" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             {(iconPaths[button.icon] ?? iconPaths['lucide:book-open']).map((path) => <path d={path} />)}
           </svg>
-          <span class="text-sm font-semibold text-moon-50">{button.name}</span>
-          <span class="radial-btn-desc text-xs text-moon-300">{button.description}</span>
-          <span class="text-xs text-moon-300">{counts[button.id] || 0} 篇</span>
+          <span class="text-base font-semibold text-moon-50">{button.name}</span>
+          <span class="radial-btn-desc text-sm text-moon-300">{button.description}</span>
+          <span class="text-sm text-moon-300">{counts[button.id] || 0} 篇</span>
         </a>
       ))}
     </div>
@@ -59,11 +59,11 @@ const iconPaths: Record<string, string[]> = {
       <PageHeader title="文章" />
 
       <div class="reveal mb-6 flex flex-wrap gap-2" style="--reveal-delay: 0ms">
-        <a href="/posts?type=all" data-type-filter="all" class="rounded-full bg-sky-bright px-4 py-1.5 text-sm font-medium text-moon-900 transition">
+        <a href="/posts?type=all" data-type-filter="all" class="rounded-full bg-sky-bright px-4 py-1.5 text-base font-medium text-moon-900 transition">
           全部 ({posts.length})
         </a>
         {postTypes.map((type) => (
-          <a href={`/posts?type=${type.id}`} data-type-filter={type.id} class="rounded-full bg-moon-800 px-4 py-1.5 text-sm font-medium text-moon-200 transition hover:bg-moon-700">
+          <a href={`/posts?type=${type.id}`} data-type-filter={type.id} class="rounded-full bg-moon-800 px-4 py-1.5 text-base font-medium text-moon-200 transition hover:bg-moon-700">
             {type.name} ({counts[type.id] || 0})
           </a>
         ))}
@@ -169,6 +169,15 @@ const iconPaths: Record<string, string[]> = {
 </script>
 
 <style is:global>
+  .page-header-title {
+    font-size: 2.25rem;
+  }
+  @media (min-width: 768px) {
+    .page-header-title {
+      font-size: 3rem;
+    }
+  }
+
   .radial-wrap {
     position: relative;
     margin: 0 auto;
@@ -210,8 +219,8 @@ const iconPaths: Record<string, string[]> = {
     left: 50%;
     top: 50%;
     transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty)));
-    width: 11rem;
-    height: 11rem;
+    width: 12rem;
+    height: 12rem;
     display: flex;
     flex-direction: column;
     align-items: center;
