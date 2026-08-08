@@ -1,19 +1,13 @@
 ---
-import '@/styles/global.css';
+import BaseLayout from '@/components/layout/BaseLayout.astro';
 import { siteConfig } from '@/data/site';
 ---
 
-<!DOCTYPE html>
-<html lang="zh-CN">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{siteConfig.title}</title>
-  </head>
-  <body class="flex min-h-screen items-center justify-center font-sans">
+<BaseLayout>
+  <section class="flex min-h-[60vh] items-center justify-center px-4 font-sans">
     <main class="text-center">
       <h1 class="mb-4 text-4xl font-bold text-sky-bright">{siteConfig.title}</h1>
       <p class="text-moon-300">Astro 5 + Tailwind CSS 3 项目骨架已就绪</p>
     </main>
-  </body>
-</html>
+  </section>
+</BaseLayout>

@@ -50,3 +50,11 @@ pnpm build
 ## 提交
 
 提交信息：`feat: add base layout, navbar, footer and theme toggle`
+
+## Follow-up Fix
+
+- Connected the current homepage to `BaseLayout`, so the shared navbar, footer, metadata, favicon, and theme initialization are active.
+- Replaced the single-ID theme binding with a delegated `data-theme-toggle` handler that supports both desktop and mobile instances, including the three-state dark/light/system cycle.
+- Added light/system-aware surface styles, mobile menu ARIA state updates, link-triggered menu closing, and decorative icon accessibility attributes.
+- Replaced the unused `astro-icon` imports in the base navbar with inline SVG icons so the project builds without an Astro icon integration.
+- Re-ran `pnpm build`: successful, 1 static page generated with no errors.

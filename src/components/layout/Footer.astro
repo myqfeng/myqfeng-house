@@ -2,10 +2,17 @@
 import { siteConfig } from '@/data/site';
 ---
 
-<footer class="border-t border-moon-700/50 bg-moon-900/50 py-8">
+<footer class="site-footer border-t py-8">
   <div class="mx-auto max-w-7xl px-4 text-center">
-    <p class="text-sm text-moon-300">
+    <p class="text-sm text-[var(--color-text-muted)]">
       © {new Date().getFullYear()} {siteConfig.title}. 明月清风，静谧求知。
     </p>
   </div>
 </footer>
+
+<style is:global>
+  .site-footer {
+    border-color: color-mix(in srgb, var(--color-text-muted) 25%, transparent);
+    background-color: color-mix(in srgb, var(--color-bg) 50%, transparent);
+  }
+</style>
