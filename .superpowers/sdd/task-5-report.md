@@ -49,6 +49,11 @@
 - 首页顺序为 Hero、资源分类、最新文章、最新资源。
 - 保留“查看全部”链接，分别指向 `/posts` 和 `/resources`。
 
+### 路由占位
+
+- 为避免首页与分类入口在后续任务前落到 404，补充了最小占位路由：`/posts`、`/categories`、`/categories/[type]`、`/resources`、`/about`。
+- 这些占位页只提供基础布局和提示文案，不替代后续正式列表/详情实现。
+
 ## 自审结果
 
 - 所有需求指定的文件均已创建或修改。
@@ -76,6 +81,11 @@
 - 静态构建完成
 - 首页 `/index.html` 成功生成
 - 共生成 1 个页面
+
+更新后重新构建：
+
+- 共生成 11 个页面
+- `/posts`、`/categories`、`/categories/[type]`、`/resources`、`/about` 均已可访问
 
 ### `git diff --check`
 

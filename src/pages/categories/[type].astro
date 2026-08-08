@@ -1,0 +1,18 @@
+---
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '@/components/layout/BaseLayout.astro';
+import { resourceTypes } from '@/data/site';
+
+export const getStaticPaths = (async () => {
+  return resourceTypes.map((type) => ({ params: { type: type.id }, props: { type } }));
+}) satisfies GetStaticPaths;
+
+const { type } = Astro.props;
+---
+
+<BaseLayout title={type.name} description={type.description}>
+  <section class="mx-auto max-w-4xl px-4 py-16 text-center">
+    <h1 class="mb-4 text-3xl font-bold text-moon-50">{type.name} 分类建设中</h1>
+    <p class="text-moon-300">后续任务会在这里展示该分类下的文章和资源。</p>
+  </section>
+</BaseLayout>
