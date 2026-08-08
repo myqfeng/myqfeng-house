@@ -1,11 +1,6 @@
 // src/types/index.ts
-export type PostType =
-  | 'tutorial'
-  | 'tool'
-  | 'ebook'
-  | 'video'
-  | 'note'
-  | 'opensource';
+// 分类 id 由用户在 site.ts 中自由定义，此处不限制具体取值
+export type PostType = string;
 
 export interface PostTypeInfo {
   id: PostType;

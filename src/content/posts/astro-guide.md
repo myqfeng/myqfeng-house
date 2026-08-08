@@ -4,7 +4,7 @@ description: "一篇关于 Astro 5 静态站点生成器的入门教程。"
 published: 2026-08-07
 source: repost-external
 sourceUrl: "https://docs.astro.build"
-type: tutorial
+type: "2"
 tags: ["Astro", "前端", "静态站点"]
 ---
 

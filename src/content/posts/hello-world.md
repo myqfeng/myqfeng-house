@@ -3,7 +3,7 @@ title: "欢迎来到明月清风的小屋"
 description: "这是站点的第一篇示例文章，用于测试布局和展示效果。"
 published: 2026-08-08
 source: original
-type: note
+type: "1"
 tags: ["开始", "说明"]
 pinned: true
 ---

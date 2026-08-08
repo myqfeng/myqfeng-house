@@ -11,6 +11,9 @@ importers:
       '@astrojs/check':
         specifier: ^0.9.0
         version: 0.9.10(prettier@3.9.6)(typescript@5.9.3)
+      '@iconify-json/lucide':
+        specifier: ^1.2.121
+        version: 1.2.121
       astro:
         specifier: ^5.0.0
         version: 5.18.2(@types/node@26.1.2)(jiti@1.21.7)(rollup@4.62.4)(typescript@5.9.3)(yaml@2.9.0)
@@ -443,6 +446,9 @@ packages:
     engines: {node: '>=18'}
     cpu: [x64]
     os: [win32]
+
+  '@iconify-json/lucide@1.2.121':
+    resolution: {integrity: sha512-zSoQQSmsyFaeTpSwURHJ9PIrsDcGFpDNhGlpiTrs+Ua4uFeH5UsE26L4OEBLrgLWoSK0UO+JhsO8yehSw0403g==}
 
   '@iconify/tools@4.2.0':
     resolution: {integrity: sha512-WRxPva/ipxYkqZd1+CkEAQmd86dQmrwH0vwK89gmp2Kh2WyyVw57XbPng0NehP3x4V1LzLsXUneP1uMfTMZmUA==}
@@ -2791,6 +2797,10 @@ snapshots:
 
   '@esbuild/win32-x64@0.27.7':
     optional: true
+
+  '@iconify-json/lucide@1.2.121':
+    dependencies:
+      '@iconify/types': 2.0.0
 
   '@iconify/tools@4.2.0':
     dependencies:

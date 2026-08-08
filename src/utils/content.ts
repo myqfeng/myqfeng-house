@@ -1,5 +1,5 @@
 import { getCollection } from 'astro:content';
-import type { PostType } from '@/types';
+import { postTypes } from '@/config/site';
 
 function sortContent<T extends { data: { pinned?: boolean; published: Date } }>(items: T[]) {
   return items.sort((a, b) => {
@@ -20,19 +20,11 @@ export async function getResources() {
 
 export async function getPostTypeCounts() {
   const posts = await getPosts();
-  const counts: Record<PostType, number> = {
-    tutorial: 0,
-    tool: 0,
-    ebook: 0,
-    video: 0,
-    note: 0,
-    opensource: 0,
-  };
-
+  const counts: Record<string, number> = {};
+  for (const type of postTypes) counts[type.id] = 0;
   for (const post of posts) {
-    counts[post.data.type as PostType]++;
+    if (post.data.type in counts) counts[post.data.type]++;
   }
-
   return counts;
 }
 

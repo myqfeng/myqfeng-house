@@ -5,15 +5,6 @@ import { resolve } from 'node:path';
 import { createInterface } from 'node:readline';
 import { stdin as input, stdout as output } from 'node:process';
 
-const TYPES = [
-  { id: 'tutorial', name: '教程文章' },
-  { id: 'tool', name: '工具软件' },
-  { id: 'ebook', name: '电子书/PDF' },
-  { id: 'video', name: '视频课程' },
-  { id: 'note', name: '笔记资料' },
-  { id: 'opensource', name: '开源项目' },
-];
-
 const rl = createInterface({ input, output });
 const queuedLines = [];
 let waiting = null;
@@ -77,15 +68,29 @@ async function getDefaultAuthor() {
   }
 }
 
-async function askType() {
+async function getTypes() {
+  try {
+    const source = await readFile(resolve('src/config/site.ts'), 'utf8');
+    const block = source.match(/postTypes:\s*PostTypeInfo\[\]\s*=\s*\[([\s\S]*?)\n\s*\];/);
+    if (block) {
+      const matches = [...block[1].matchAll(/\{\s*id:\s*'([^']+)',\s*name:\s*'([^']+)'/g)];
+      if (matches.length) return matches.map((m) => ({ id: m[1], name: m[2] }));
+    }
+  } catch {
+    return [];
+  }
+  return [];
+}
+
+async function askType(types) {
   console.log('选择分类:');
-  TYPES.forEach((type, index) => console.log(`  ${index + 1}. ${type.name} (${type.id})`));
+  types.forEach((type, index) => console.log(`  ${index + 1}. ${type.name} (${type.id})`));
   const answer = await ask('分类编号', '1');
   const index = parseInt(answer, 10);
-  if (Number.isInteger(index) && index >= 1 && index <= TYPES.length) {
-    return TYPES[index - 1].id;
+  if (Number.isInteger(index) && index >= 1 && index <= types.length) {
+    return types[index - 1].id;
   }
-  return TYPES[0].id;
+  return types[0].id;
 }
 
 function parseTags(raw) {
@@ -113,13 +118,14 @@ function frontmatter(fields) {
 
 async function main() {
   const author = await getDefaultAuthor();
+  const types = await getTypes();
   const title = await ask('文章标题');
   if (!title) {
     console.error('标题不能为空，已取消。');
     process.exit(1);
   }
   const description = await ask('摘要（可选）');
-  const type = await askType();
+  const type = await askType(types);
   const rawTags = await ask('标签（用逗号分隔，可选）');
   const tags = parseTags(rawTags);
   const source = await ask('来源（original / repost-local / repost-external，默认 original）', 'original');

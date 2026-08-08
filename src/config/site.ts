@@ -71,14 +71,15 @@ export const siteConfig: SiteConfig = {
   },
 };
 
-// 文章分类体系（资源不分类，仅使用 tags 标签）
+// 文章分类体系（icon 使用 lucide 图标名，如 lucide:cpu / lucide:terminal / lucide:code）
 export const postTypes: PostTypeInfo[] = [
-  { id: 'tutorial', name: '教程文章', icon: 'lucide:book-open', description: '系统化的学习教程与文章' },
-  { id: 'tool', name: '工具软件', icon: 'lucide:wrench', description: '提升效率的软件与工具' },
-  { id: 'ebook', name: '电子书/PDF', icon: 'lucide:book', description: '电子书籍与 PDF 文档' },
-  { id: 'video', name: '视频课程', icon: 'lucide:play-circle', description: '优质视频教程' },
-  { id: 'note', name: '笔记资料', icon: 'lucide:notebook', description: '学习笔记与资料整理' },
-];
+  { id: '0', name: '计算机基础篇', icon: 'lucide:square-play', description: '掌握基础计算机知识' },
+  { id: '1', name: '语言入门篇', icon: 'lucide:code', description: '程序设计语言入门学习' },
+  { id: '2', name: '工具软件篇', icon: 'lucide:wrench', description: '工欲善其事，必先利其器' },
+  { id: '3', name: '嵌入式 MCU 篇', icon: 'lucide:cpu', description: '学习嵌入式单片机开发' }, 
+  { id: '4', name: '计算机视觉篇', icon: 'lucide:camera', description: '计算机视觉基础' },
+  { id: '5', name: 'Linux 开发篇', icon: 'lucide:terminal', description: '来玩玩 Linux 吧' },
+    ];
 
 export function getPostTypeById(id: string): PostTypeInfo | undefined {
   return postTypes.find((t) => t.id === id);
