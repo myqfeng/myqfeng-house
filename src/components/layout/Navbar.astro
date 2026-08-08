@@ -1,6 +1,5 @@
 ---
 import { siteConfig } from '@/data/site';
-import ThemeToggle from '@/components/ui/ThemeToggle.astro';
 import PagefindSearch from '@/components/ui/PagefindSearch.astro';
 ---
 
@@ -19,7 +18,6 @@ import PagefindSearch from '@/components/ui/PagefindSearch.astro';
           {link.name}
         </a>
       ))}
-      <ThemeToggle />
     </div>
 
     <div class="flex items-center gap-1">
@@ -38,9 +36,6 @@ import PagefindSearch from '@/components/ui/PagefindSearch.astro';
         {link.name}
       </a>
     ))}
-    <div class="pt-2">
-      <ThemeToggle />
-    </div>
   </div>
 </header>
 

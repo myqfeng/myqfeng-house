@@ -15,34 +15,6 @@
     --color-accent-hover: #93c5fd;
   }
 
-  html.light {
-    color-scheme: light;
-    --color-bg: #f8fafc;
-    --color-bg-image: radial-gradient(ellipse at top, rgba(226, 232, 240, 0.75) 0%, rgba(241, 245, 249, 0.92) 55%, #e2e8f0 100%);
-    --color-card: rgba(255, 255, 255, 0.9);
-    --color-text: #0f172a;
-    --color-text-muted: #475569;
-    --color-accent: #2563eb;
-    --color-accent-hover: #3b82f6;
-  }
-
-  html.system {
-    color-scheme: dark;
-  }
-
-  @media (prefers-color-scheme: light) {
-    html.system {
-      --color-bg: #f8fafc;
-      --color-bg-image: radial-gradient(ellipse at top, rgba(226, 232, 240, 0.75) 0%, rgba(241, 245, 249, 0.92) 55%, #e2e8f0 100%);
-      --color-card: rgba(255, 255, 255, 0.9);
-      --color-text: #0f172a;
-      --color-text-muted: #475569;
-      --color-accent: #2563eb;
-      --color-accent-hover: #3b82f6;
-      color-scheme: light;
-    }
-  }
-
   html {
     scroll-behavior: smooth;
   }
