@@ -11,7 +11,6 @@ export const siteConfig: SiteConfig = {
   navLinks: [
     { name: '首页', url: '/' },
     { name: '文章', url: '/posts' },
-    { name: '分类', url: '/categories' },
     { name: '资源', url: '/resources' },
     { name: '关于', url: '/about' },
   ],

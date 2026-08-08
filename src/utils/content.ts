@@ -18,11 +18,6 @@ export async function getResources() {
   return sortContent(resources.filter((r) => !r.data.draft));
 }
 
-export async function getPostsByType(type: ResourceType) {
-  const posts = await getPosts();
-  return posts.filter((p) => p.data.type === type);
-}
-
 export async function getPostTypeCounts() {
   const posts = await getPosts();
   const counts: Record<ResourceType, number> = {
