@@ -115,12 +115,23 @@ const resultsId = `search-results-${id}`;
       debounceTimer = setTimeout(() => runSearch(query), 250);
     };
 
-    trigger.addEventListener('click', async () => {
+    const openSearch = (initialQuery = '') => {
       dialog.showModal();
       trigger.setAttribute('aria-expanded', 'true');
+      input.value = initialQuery;
       input.focus();
+      if (initialQuery) {
+        onInput();
+      } else {
+        searchSeq++;
+        status.textContent = '';
+        results.innerHTML = '';
+      }
       loadPagefind().catch(() => {});
-    });
+    };
+
+    window.__openPagefindSearch = openSearch;
+    trigger.addEventListener('click', () => openSearch());
 
     close.addEventListener('click', () => dialog.close());
     dialog.addEventListener('click', (e) => {

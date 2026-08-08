@@ -1,12 +1,10 @@
 ---
 import BaseLayout from '@/components/layout/BaseLayout.astro';
 import Hero from '@/components/layout/Hero.astro';
-import CategoryGrid from '@/components/widgets/CategoryGrid.astro';
 import PostCard from '@/components/layout/PostCard.astro';
 import ResourceCard from '@/components/layout/ResourceCard.astro';
-import { getPosts, getResources, getPostTypeCounts } from '@/utils/content';
+import { getPosts, getResources } from '@/utils/content';
 
-const counts = await getPostTypeCounts();
 const posts = await getPosts();
 const resources = await getResources();
 const latestPosts = posts.slice(0, 3);
@@ -15,25 +13,54 @@ const latestResources = resources.slice(0, 3);
 
 <BaseLayout>
   <Hero />
-  <CategoryGrid counts={counts} />
 
-  <section class="mx-auto max-w-7xl px-4 py-16">
-    <div class="mb-6 flex items-center justify-between gap-4">
-      <h2 class="text-2xl font-bold text-moon-50">最新文章</h2>
-      <a href="/posts" class="text-sm text-sky-glow hover:underline">查看全部</a>
+  <section class="mx-auto max-w-7xl px-4 py-16 md:py-24">
+    <div class="mb-10 flex items-end justify-between gap-4">
+      <div>
+        <p class="section-kicker mb-3 font-mono text-[11px] tracking-[0.3em] text-sky-glow">LATEST</p>
+        <h2 class="text-3xl font-bold text-moon-50 md:text-4xl">最新文章</h2>
+      </div>
+      <a href="/posts" class="group inline-flex items-center gap-1 text-sm text-sky-glow hover:underline">
+        查看全部
+        <svg class="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M5 12h14M13 6l6 6-6 6" />
+        </svg>
+      </a>
     </div>
     <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
       {latestPosts.map((post) => <PostCard post={post} />)}
     </div>
   </section>
 
-  <section class="mx-auto max-w-7xl px-4 py-16">
-    <div class="mb-6 flex items-center justify-between gap-4">
-      <h2 class="text-2xl font-bold text-moon-50">最新资源</h2>
-      <a href="/resources" class="text-sm text-sky-glow hover:underline">查看全部</a>
+  <section class="mx-auto max-w-7xl px-4 py-16 md:py-24">
+    <div class="mb-10 flex items-end justify-between gap-4">
+      <div>
+        <p class="section-kicker mb-3 font-mono text-[11px] tracking-[0.3em] text-sky-glow">DOWNLOADS</p>
+        <h2 class="text-3xl font-bold text-moon-50 md:text-4xl">最新资源</h2>
+      </div>
+      <a href="/resources" class="group inline-flex items-center gap-1 text-sm text-sky-glow hover:underline">
+        查看全部
+        <svg class="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M5 12h14M13 6l6 6-6 6" />
+        </svg>
+      </a>
     </div>
     <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
       {latestResources.map((resource) => <ResourceCard resource={resource} />)}
     </div>
   </section>
 </BaseLayout>
+
+<style is:global>
+  .section-kicker {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+  }
+  .section-kicker::before {
+    content: '';
+    width: 2.4rem;
+    height: 1px;
+    background: var(--color-accent);
+  }
+</style>

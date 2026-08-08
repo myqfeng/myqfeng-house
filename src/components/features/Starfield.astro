@@ -1,0 +1,141 @@
+---
+interface Props {
+  starCount?: number;
+  meteorInterval?: number;
+}
+
+const { starCount = 140, meteorInterval = 4000 } = Astro.props;
+---
+
+<div class="starfield" data-starfield aria-hidden="true">
+  <canvas data-starfield-canvas></canvas>
+</div>
+
+<script is:inline define:vars={{ starCount, meteorInterval }}>
+  (() => {
+    const container = document.querySelector('[data-starfield]');
+    const canvas = container?.querySelector('[data-starfield-canvas]');
+    if (!container || !canvas) return;
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const ctx = canvas.getContext('2d');
+    let width = 0;
+    let height = 0;
+    let dpr = 1;
+    let stars = [];
+    let meteors = [];
+    let raf = null;
+    let lastMeteorAt = 0;
+
+    const rand = (min, max) => min + Math.random() * (max - min);
+
+    function resize() {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      width = container.clientWidth;
+      height = container.clientHeight;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      initStars();
+    }
+
+    function initStars() {
+      const count = Math.floor((starCount * width * height) / (1920 * 1080)) + 60;
+      stars = Array.from({ length: count }, () => ({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        r: rand(0.4, 1.6),
+        phase: Math.random() * Math.PI * 2,
+        speed: rand(0.008, 0.03),
+        opacity: rand(0.2, 0.9),
+        hue: Math.random() < 0.85 ? 0 : rand(200, 230),
+      }));
+    }
+
+    function spawnMeteor() {
+      meteors.push({
+        x: rand(width * 0.1, width * 0.95),
+        y: rand(-height * 0.2, height * 0.1),
+        vx: rand(-3.2, -2),
+        vy: rand(2, 3.2),
+        life: 1,
+        len: rand(80, 160),
+      });
+    }
+
+    function drawStars(t) {
+      for (const star of stars) {
+        const twinkle = 0.55 + 0.45 * Math.sin(t * star.speed * 60 + star.phase);
+        const alpha = star.opacity * twinkle;
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
+        if (star.hue > 0) {
+          ctx.fillStyle = `hsla(${star.hue}, 90%, 82%, ${alpha})`;
+        } else {
+          ctx.fillStyle = `rgba(248, 250, 252, ${alpha})`;
+        }
+        ctx.fill();
+      }
+    }
+
+    function drawMeteors(dt) {
+      meteors = meteors.filter((m) => m.life > 0);
+      for (const m of meteors) {
+        m.x += m.vx;
+        m.y += m.vy;
+        m.life -= dt * 0.0016;
+        const tailX = m.x - m.vx * 8;
+        const tailY = m.y - m.vy * 8;
+        const grad = ctx.createLinearGradient(m.x, m.y, tailX, tailY);
+        grad.addColorStop(0, `rgba(147, 197, 253, ${0.9 * m.life})`);
+        grad.addColorStop(1, 'rgba(147, 197, 253, 0)');
+        ctx.strokeStyle = grad;
+        ctx.lineWidth = 1.4;
+        ctx.beginPath();
+        ctx.moveTo(m.x, m.y);
+        ctx.lineTo(tailX, tailY);
+        ctx.stroke();
+      }
+    }
+
+    function frame(t) {
+      ctx.clearRect(0, 0, width, height);
+      drawStars(t);
+      if (!reducedMotion) {
+        if (t - lastMeteorAt > meteorInterval) {
+          lastMeteorAt = t;
+          spawnMeteor();
+        }
+        drawMeteors(16.7);
+      }
+      raf = requestAnimationFrame(frame);
+    }
+
+    resize();
+    window.addEventListener('resize', resize);
+
+    if (reducedMotion) {
+      frame(0);
+      return;
+    }
+    raf = requestAnimationFrame(frame);
+
+    window.addEventListener('beforeunload', () => {
+      if (raf) cancelAnimationFrame(raf);
+    });
+  })();
+</script>
+
+<style is:global>
+  .starfield {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .starfield canvas {
+    display: block;
+  }
+</style>

@@ -1,21 +1,197 @@
 ---
 import { siteConfig } from '@/config/site';
+import Starfield from '@/components/features/Starfield.astro';
+
+const titleChars = [...siteConfig.title];
 ---
 
-<section class="relative flex min-h-[60vh] flex-col items-center justify-center px-4 text-center">
-  <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_25%,rgba(147,197,253,0.14),transparent_28%),linear-gradient(180deg,rgba(15,23,42,0.1),rgba(2,6,23,0.72))]" aria-hidden="true"></div>
-  <div class="relative z-10">
-    <h1 class="mb-4 text-4xl font-bold tracking-tight text-moon-50 md:text-6xl">
-      {siteConfig.title}
+<section class="hero relative flex min-h-svh flex-col items-center justify-center overflow-hidden px-4 text-center">
+  <Starfield />
+
+  <div class="hero-moon" aria-hidden="true">
+    <div class="hero-moon-core"></div>
+  </div>
+
+  <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_30%,rgba(147,197,253,0.1),transparent_45%),linear-gradient(180deg,rgba(15,23,42,0.35),rgba(2,6,23,0.85))]" aria-hidden="true"></div>
+
+  <div class="relative z-10 flex flex-col items-center px-4">
+    <p class="hero-eyebrow font-mono text-xs tracking-[0.35em] text-moon-300/90">
+      <span class="hero-dash" aria-hidden="true"></span>
+      MYQFENG · LEARNING HUB
+    </p>
+
+    <h1 class="hero-title mb-6 text-5xl font-bold tracking-tight text-moon-50 md:text-7xl" aria-label={siteConfig.title}>
+      {titleChars.map((char, index) => (
+        <span class="hero-char-mask" aria-hidden="true">
+          <span class="hero-char" style={`animation-delay: ${index * 0.07}s`}>{char}</span>
+        </span>
+      ))}
     </h1>
-    <p class="mb-8 text-lg text-moon-300 md:text-xl">
+
+    <p class="hero-bio mb-10 max-w-[38ch] text-lg leading-relaxed text-moon-200/90 md:text-xl">
       {siteConfig.subtitle}
     </p>
-    <a href="/posts" class="inline-flex items-center gap-2 rounded-full bg-sky-bright px-6 py-3 font-medium text-moon-900 transition hover:bg-sky-glow focus:outline-none focus:ring-2 focus:ring-sky-glow focus:ring-offset-2 focus:ring-offset-moon-900">
-      开始探索
-      <svg class="h-4 w-4" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M5 12h14M13 6l6 6-6 6" />
-      </svg>
-    </a>
+
+    <div class="hero-search mb-4 w-full max-w-md">
+      <div class="flex items-center gap-3 rounded-2xl border border-moon-700/60 bg-moon-900/60 px-4 py-3 backdrop-blur-md transition focus-within:border-sky-bright focus-within:shadow-[0_0_24px_rgba(96,165,250,0.25)]">
+        <svg class="h-5 w-5 shrink-0 text-moon-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="8" />
+          <path d="m21 21-4.3-4.3" />
+        </svg>
+        <input
+          id="hero-search"
+          type="search"
+          class="w-full bg-transparent text-moon-50 placeholder-moon-400 focus:outline-none"
+          placeholder="搜索文章、资源..."
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <kbd class="hidden shrink-0 rounded-md border border-moon-700 bg-moon-800/80 px-2 py-0.5 font-mono text-xs text-moon-400 md:inline-block" aria-hidden="true">↵</kbd>
+      </div>
+    </div>
+
+    <div class="flex flex-wrap items-center justify-center gap-4">
+      <a href="/posts" class="group inline-flex items-center gap-2 rounded-full bg-sky-bright px-7 py-3 font-medium text-moon-900 shadow-[0_0_20px_rgba(96,165,250,0.35)] transition hover:-translate-y-0.5 hover:bg-sky-glow hover:shadow-[0_0_30px_rgba(147,197,253,0.5)] focus:outline-none focus:ring-2 focus:ring-sky-glow focus:ring-offset-2 focus:ring-offset-moon-900">
+        开始探索
+        <svg class="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M5 12h14M13 6l6 6-6 6" />
+        </svg>
+      </a>
+      <a href="/resources" class="inline-flex items-center gap-2 rounded-full border border-moon-600/60 px-7 py-3 font-medium text-moon-200 transition hover:-translate-y-0.5 hover:border-sky-bright hover:text-sky-glow focus:outline-none focus:ring-2 focus:ring-sky-glow">
+        资源下载
+      </a>
+    </div>
   </div>
+
+  <button type="button" class="hero-scroll-hint absolute bottom-8 left-1/2 -translate-x-1/2" aria-label="向下滚动">
+    <span class="hero-scroll-text font-mono text-[10px] tracking-[0.4em] text-moon-400">SCROLL</span>
+    <span class="hero-scroll-wire" aria-hidden="true"></span>
+  </button>
 </section>
+
+<script is:inline>
+  const scrollHint = document.querySelector('.hero-scroll-hint');
+  scrollHint?.addEventListener('click', () => {
+    window.scrollTo({ top: window.innerHeight, behavior: 'smooth' });
+  });
+
+  const heroInput = document.getElementById('hero-search');
+  heroInput?.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+      const query = heroInput.value.trim();
+      window.__openPagefindSearch?.(query);
+    }
+  });
+</script>
+
+<style is:global>
+  .hero-moon {
+    position: absolute;
+    top: 9%;
+    right: 12%;
+    width: clamp(80px, 12vw, 150px);
+    height: clamp(80px, 12vw, 150px);
+    pointer-events: none;
+  }
+  .hero-moon-core {
+    width: 100%;
+    height: 100%;
+    border-radius: 9999px;
+    background: radial-gradient(circle at 38% 35%, #f8fafc 0%, #e2e8f0 45%, rgba(226, 232, 240, 0) 72%);
+    box-shadow: 0 0 40px rgba(248, 250, 252, 0.35), 0 0 90px rgba(147, 197, 253, 0.25);
+    animation: hero-moon-glow 6s ease-in-out infinite;
+  }
+  @keyframes hero-moon-glow {
+    0%, 100% { box-shadow: 0 0 40px rgba(248, 250, 252, 0.35), 0 0 90px rgba(147, 197, 253, 0.25); }
+    50% { box-shadow: 0 0 55px rgba(248, 250, 252, 0.5), 0 0 120px rgba(147, 197, 253, 0.35); }
+  }
+
+  .hero-eyebrow {
+    opacity: 0;
+    animation: hero-fade-up 0.8s 0.15s forwards;
+  }
+  .hero-dash {
+    display: inline-block;
+    width: 3rem;
+    height: 1px;
+    background: var(--color-accent);
+    margin-right: 0.75rem;
+  }
+
+  .hero-title {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .hero-char-mask {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: bottom;
+    padding-bottom: 0.08em;
+    margin-bottom: -0.08em;
+  }
+  .hero-char {
+    display: inline-block;
+    transform: translateY(110%);
+    animation: hero-char-up 0.9s cubic-bezier(0.65, 0.05, 0, 1) forwards;
+  }
+  @keyframes hero-char-up {
+    to { transform: translateY(0); }
+  }
+
+  .hero-bio {
+    opacity: 0;
+    animation: hero-fade-up 0.9s 0.65s forwards;
+  }
+  .hero-search {
+    opacity: 0;
+    animation: hero-fade-up 0.9s 0.85s forwards;
+  }
+  .hero-search + div {
+    opacity: 0;
+    animation: hero-fade-up 0.9s 1s forwards;
+  }
+  @keyframes hero-fade-up {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-scroll-hint {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.7rem;
+    opacity: 0;
+    animation: hero-fade-up 0.9s 1.3s forwards;
+  }
+  .hero-scroll-wire {
+    display: block;
+    width: 1px;
+    height: 48px;
+    background: rgba(148, 163, 184, 0.3);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-scroll-wire::after {
+    content: '';
+    position: absolute;
+    top: -40%;
+    left: 0;
+    width: 100%;
+    height: 40%;
+    background: var(--color-accent);
+    animation: hero-wire 2s cubic-bezier(0.65, 0.05, 0, 1) infinite;
+  }
+  @keyframes hero-wire {
+    to { top: 110%; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-char { transform: none; animation: none; }
+    .hero-eyebrow, .hero-bio, .hero-search, .hero-search + div, .hero-scroll-hint { opacity: 1; animation: none; }
+    .hero-moon-core, .hero-scroll-wire::after { animation: none; }
+  }
+</style>
