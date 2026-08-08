@@ -166,40 +166,81 @@ pinned: false
 
 ## 修改站点信息配置
 
-站点级配置集中在 **`src/config/site.ts`**，修改后保存即可，无需改动其他代码。
+站点级配置集中在 **`src/config/site.ts`**，修改后保存即可，无需改动其他代码。以下按区块说明可自定义项：
+
+### 站点基本信息
 
 ```typescript
 export const siteConfig: SiteConfig = {
-  title: '明月清风的小屋',        // 站点标题（导航栏、页面标题、页脚）
-  subtitle: '收集星光，分享知识',  // 首页 Hero 副标题
+  title: '明月清风的小屋',          // 站点标题（导航栏、页面标题、页脚）
+  subtitle: '收集星光，分享知识',    // 首页 Hero 副标题
   description: '一个专注于学习资源收集与分享的个人站点……', // 站点描述（SEO）
   siteUrl: 'https://example.com',  // ⚠️ 部署前必须替换为你自己的域名
   author: '站长',
   pageSize: 12,                    // 文章/资源每页显示条数
-  navLinks: [
-    { name: '首页', url: '/' },
-    { name: '文章', url: '/posts' },
-    { name: '资源', url: '/resources' },
-    { name: '关于', url: '/about' },
-  ],                               // 导航栏菜单，可增删或修改顺序
+  keywords: ['明月清风', '学习资源'], // SEO 关键词（<meta name="keywords">）
+  favicon: ['/favicon.svg'],       // 网站图标，可放多个（多尺寸/多格式）
+  announcement: '本站持续收录优质学习资源，欢迎收藏！', // 首页 Hero 顶部公告，留空不显示
 };
-
-// 文章分类体系（资源不分类，仅使用 tags 标签）
-export const postTypes: PostTypeInfo[] = [
-  { id: 'tutorial',  name: '教程文章',  icon: 'lucide:book-open',  description: '系统化的学习教程与文章' },
-  { id: 'tool',      name: '工具软件',  icon: 'lucide:wrench',     description: '提升效率的软件与工具' },
-  { id: 'ebook',     name: '电子书/PDF', icon: 'lucide:book',      description: '电子书籍与 PDF 文档' },
-  { id: 'video',     name: '视频课程',  icon: 'lucide:play-circle',description: '优质视频教程' },
-  { id: 'note',      name: '笔记资料',  icon: 'lucide:notebook',   description: '学习笔记与资料整理' },
-  { id: 'opensource',name: '开源项目',  icon: 'lucide:code',       description: '值得学习的开源项目' },
-];
 ```
 
-### 修改站点名称 / 描述
+### 导航栏 Logo（Header 图标）
 
-直接改 `title`、`subtitle`、`description`、`author` 字段即可。
+```typescript
+navbar: {
+  logo: {
+    type: 'icon',                  // 三种类型：icon（内联 SVG）/ emoji / image（图片路径）
+    value: '<svg viewBox="0 0 24 24" ...>...</svg>',
+    alt: '站点 Logo',
+  },
+},
+```
 
-### 修改导航菜单
+- `emoji`：`{ type: 'emoji', value: '🌙' }`
+- `image`：`{ type: 'image', value: '/logo.png', alt: 'Logo' }`（图片放在 `public/` 下）
+- `icon`：`{ type: 'icon', value: '<svg>...</svg>' }`（内联 SVG 源码）
+
+### 首页 Hero
+
+```typescript
+hero: {
+  eyebrow: 'MYQFENG · LEARNING HUB', // Hero 眉题（小字标签），留空不显示
+  buttons: [
+    { label: '开始探索', url: '/posts', style: 'primary' }, // 主按钮（高亮发光）
+    { label: '资源下载', url: '/resources', style: 'ghost' }, // 次按钮（描边）
+  ],
+},
+```
+
+### 社交链接（页脚）
+
+```typescript
+socialLinks: [
+  { label: 'GitHub', url: 'https://github.com/' },
+  { label: '邮箱', url: 'mailto:hello@example.com' },
+],
+```
+
+### 页脚
+
+```typescript
+footer: {
+  html: '<a href="https://beian.miit.gov.cn/">京ICP备XXXXXXXX号</a>', // 自定义 HTML 直接注入页脚（备案号等），留空不显示
+  links: [{ label: '关于本站', url: '/about' }],  // 页脚链接组
+  copyright: '明月清风，静谧求知。',              // 版权文案（自动拼上 © 年份 站点名）
+},
+```
+
+### 统计代码（可选）
+
+```typescript
+analytics: {
+  head: '<script>...百度统计/谷歌分析代码...</script>', // 注入 <head>
+  body: '',                                            // 注入 <body> 开头
+},
+```
+
+### 导航菜单
 
 增删 `navLinks` 数组中的项即可，例如添加「友链」：
 
