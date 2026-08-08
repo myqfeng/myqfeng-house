@@ -1,6 +1,5 @@
 ---
 import { siteConfig } from '@/config/site';
-import Starfield from '@/components/features/Starfield.astro';
 
 const titleChars = [...siteConfig.title];
 const eyebrow = siteConfig.hero?.eyebrow ?? '';
@@ -12,9 +11,7 @@ const announcement = siteConfig.announcement ?? '';
 ---
 
 <section class="hero relative flex min-h-svh flex-col items-center justify-center overflow-hidden px-4 text-center">
-  <Starfield />
-
-  <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_30%,rgba(147,197,253,0.1),transparent_45%),linear-gradient(180deg,rgba(15,23,42,0.35),rgba(2,6,23,0.85))]" aria-hidden="true"></div>
+  <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_30%,rgba(147,197,253,0.08),transparent_45%),linear-gradient(180deg,rgba(15,23,42,0.22),rgba(2,6,23,0.55))]" aria-hidden="true"></div>
 
   <div class="relative z-10 flex flex-col items-center px-4">
     {announcement && (
@@ -106,11 +103,11 @@ const announcement = siteConfig.announcement ?? '';
 <style is:global>
   .hero-eyebrow {
     opacity: 0;
-    animation: hero-fade-up 0.8s 0.15s forwards;
+    animation: fade-up 0.8s 0.15s forwards;
   }
   .hero-announcement {
     opacity: 0;
-    animation: hero-fade-up 0.8s 0.05s forwards;
+    animation: fade-up 0.8s 0.05s forwards;
   }
   .hero-dash {
     display: inline-block;
@@ -135,27 +132,20 @@ const announcement = siteConfig.announcement ?? '';
   .hero-char {
     display: inline-block;
     transform: translateY(110%);
-    animation: hero-char-up 0.9s cubic-bezier(0.65, 0.05, 0, 1) forwards;
-  }
-  @keyframes hero-char-up {
-    to { transform: translateY(0); }
+    animation: char-up 0.9s cubic-bezier(0.65, 0.05, 0, 1) forwards;
   }
 
   .hero-bio {
     opacity: 0;
-    animation: hero-fade-up 0.9s 0.65s forwards;
+    animation: fade-up 0.9s 0.65s forwards;
   }
   .hero-search {
     opacity: 0;
-    animation: hero-fade-up 0.9s 0.85s forwards;
+    animation: fade-up 0.9s 0.85s forwards;
   }
   .hero-search + div {
     opacity: 0;
-    animation: hero-fade-up 0.9s 1s forwards;
-  }
-  @keyframes hero-fade-up {
-    from { opacity: 0; transform: translateY(16px); }
-    to { opacity: 1; transform: translateY(0); }
+    animation: fade-up 0.9s 1s forwards;
   }
 
   .hero-scroll-hint {
@@ -167,7 +157,7 @@ const announcement = siteConfig.announcement ?? '';
     align-items: center;
     gap: 0.7rem;
     opacity: 0;
-    animation: hero-fade-up 0.9s 1.3s forwards;
+    animation: fade-up 0.9s 1.3s forwards;
   }
   .hero-scroll-wire {
     display: block;
@@ -185,10 +175,7 @@ const announcement = siteConfig.announcement ?? '';
     width: 100%;
     height: 40%;
     background: var(--color-accent);
-    animation: hero-wire 2s cubic-bezier(0.65, 0.05, 0, 1) infinite;
-  }
-  @keyframes hero-wire {
-    to { top: 110%; }
+    animation: wire 2s cubic-bezier(0.65, 0.05, 0, 1) infinite;
   }
 
   @media (prefers-reduced-motion: reduce) {
