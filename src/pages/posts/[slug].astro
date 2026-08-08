@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '@/components/layout/BaseLayout.astro';
+import PageHeader from '@/components/layout/PageHeader.astro';
 import { getPostTypeById } from '@/config/site';
 import { formatDate } from '@/utils/format';
 
@@ -15,26 +16,12 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 const { Content } = await render(post);
 const typeInfo = getPostTypeById(post.data.type);
+const metaText = typeInfo ? `${typeInfo.name} · ${formatDate(post.data.published)}` : formatDate(post.data.published);
 ---
 
 <BaseLayout title={post.data.title} description={post.data.description}>
   <article class="mx-auto max-w-3xl px-4 py-12">
-    <header class="mb-8">
-      <div class="mb-4 flex items-center gap-2 text-sm text-sky-glow">
-        {typeInfo && <span>{typeInfo.name}</span>}
-        {typeInfo && <span>·</span>}
-        <span>{formatDate(post.data.published)}</span>
-      </div>
-      <h1 class="mb-4 text-3xl font-bold text-moon-50 md:text-4xl">{post.data.title}</h1>
-      {post.data.description && <p class="text-lg text-moon-300">{post.data.description}</p>}
-      {post.data.tags.length > 0 && (
-        <div class="mt-4 flex flex-wrap gap-2">
-          {post.data.tags.map((tag) => (
-            <span class="rounded-full bg-moon-800 px-3 py-1 text-xs text-moon-300">{tag}</span>
-          ))}
-        </div>
-      )}
-    </header>
+    <PageHeader title={post.data.title} description={post.data.description} meta={metaText} tags={post.data.tags} />
 
     {post.data.source !== 'original' && (
       <div class="mb-8 rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 text-sm text-amber-200">

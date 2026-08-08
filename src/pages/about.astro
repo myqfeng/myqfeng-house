@@ -1,11 +1,12 @@
 ---
 import BaseLayout from '@/components/layout/BaseLayout.astro';
+import PageHeader from '@/components/layout/PageHeader.astro';
 import { siteConfig } from '@/config/site';
 ---
 
 <BaseLayout title="关于" description={`关于 ${siteConfig.title}`}>
   <section class="mx-auto max-w-3xl px-4 py-12">
-    <h1 class="mb-8 text-3xl font-bold text-moon-50">关于</h1>
+    <PageHeader title="关于" />
     <div class="glass-card p-8 prose prose-invert max-w-none">
       <p>欢迎来到 <strong>{siteConfig.title}</strong>。</p>
       <p>这是一个个人学习资源聚合站，用于收集、整理和分享学习过程中遇到的有价值内容。</p>

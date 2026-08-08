@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '@/components/layout/BaseLayout.astro';
+import PageHeader from '@/components/layout/PageHeader.astro';
 import SearchBox from '@/components/ui/SearchBox.astro';
 import ResourceCard from '@/components/layout/ResourceCard.astro';
 import { getResources, getResourceTags } from '@/utils/content';
@@ -11,7 +12,7 @@ const tags = Object.keys(tagCounts).sort((a, b) => tagCounts[b] - tagCounts[a]);
 
 <BaseLayout title="资源下载" description="精选学习资源下载链接">
   <section class="mx-auto max-w-7xl px-4 py-12">
-    <h1 class="mb-8 text-3xl font-bold text-moon-50">资源下载</h1>
+    <PageHeader title="资源下载" />
 
     {tags.length > 0 && (
       <div class="mb-6 flex flex-wrap gap-2">
