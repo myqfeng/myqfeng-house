@@ -48,3 +48,29 @@ export interface SiteConfig {
     body?: string;
   };
 }
+
+export interface ArtalkConfig {
+  server: string;
+  locale?: string;
+  visitorCount?: boolean;
+}
+
+export interface GiscusConfig {
+  repo: string;
+  repoId: string;
+  category: string;
+  categoryId: string;
+  mapping?: string;
+  strict?: string;
+  reactionsEnabled?: string;
+  emitMetadata?: string;
+  inputPosition?: string;
+  lang?: string;
+  loading?: string;
+}
+
+export interface CommentConfig {
+  type: 'none' | 'artalk' | 'giscus';
+  artalk?: ArtalkConfig;
+  giscus?: GiscusConfig;
+}

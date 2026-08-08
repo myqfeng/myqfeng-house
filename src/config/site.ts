@@ -26,6 +26,7 @@ export const siteConfig: SiteConfig = {
     { name: '首页', url: '/' },
     { name: '文章', url: '/posts' },
     { name: '资源', url: '/resources' },
+    { name: '留言板', url: '/guestbook' },
     { name: '关于', url: '/about' },
   ],
   navbar: {

@@ -2,6 +2,7 @@
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '@/components/layout/BaseLayout.astro';
 import PageHeader from '@/components/layout/PageHeader.astro';
+import Comment from '@/components/comment/Comment.astro';
 import { getPostTypeById } from '@/config/site';
 import { formatDate } from '@/utils/format';
 
@@ -57,6 +58,8 @@ const metaText = typeInfo ? `${typeInfo.name} · ${formatDate(post.data.publishe
     <div class="prose prose-invert prose-lg max-w-none prose-headings:text-moon-50 prose-p:text-moon-200 prose-a:text-sky-glow prose-strong:text-moon-100">
       <Content />
     </div>
+
+    <Comment post={post} />
 
     <footer class="mt-12 border-t border-moon-700/50 pt-6">
       <a href="/posts" class="text-sm text-sky-glow hover:underline focus:outline-none focus:ring-2 focus:ring-sky-glow">

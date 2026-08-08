@@ -1,0 +1,31 @@
+---
+import { commentConfig } from '@/config/commentConfig';
+import { siteConfig } from '@/config/site';
+
+interface Props {
+  pageKey: string;
+}
+
+const { pageKey } = Astro.props;
+const config = {
+  ...(commentConfig.artalk ?? {}),
+  el: '#artalk',
+  site: siteConfig.title,
+  pageKey,
+  dark: 'html.dark',
+  pageTitle: '',
+  ...(commentConfig.artalk?.visitorCount ? { pageview: true } : {}),
+};
+---
+
+<div id="artalk" style="--at-color-main: var(--color-accent); --at-color-bg: var(--color-card); --at-color-border: #334155;"></div>
+
+<link rel="stylesheet" href="https://unpkg.com/artalk/dist/Artalk.css" />
+
+<script is:inline data-astro-rerun define:vars={{ config }}>
+  import('https://unpkg.com/artalk/dist/Artalk.mjs').then(({ default: Artalk }) => {
+    const artalk = Artalk.init(config);
+    artalk.setDarkMode(true);
+    window.__artalk = artalk;
+  });
+</script>

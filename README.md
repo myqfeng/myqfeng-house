@@ -267,6 +267,21 @@ navLinks: [
 
 「关于」页面内容在 **`src/content/spec/about.md`** 中，站点介绍、免责声明等文案直接编辑该 Markdown 文件（支持标题、列表、加粗、链接等完整 Markdown 语法），保存后重新构建即可生效。
 
+### 评论系统（Artalk / Giscus）
+
+评论系统在 **`src/config/commentConfig.ts`** 中配置，支持 Artalk 与 Giscus（GitHub Discussions）两种，`type` 改为 `'none'` 可关闭。
+
+**Artalk**（默认启用，需自建后端）：
+1. 按官方文档部署 Artalk 服务端（Docker：`docker run -d -p 8080:23366 -v ~/.artalk-data:/data artalk/artalk-go`）
+2. 将 `artalk.server` 改为你的后端地址，例如 `'https://artalk.example.com/'`（注意结尾 `/`）
+
+**Giscus**（基于 GitHub Discussions，无需后端）：
+1. 在 GitHub 仓库开启 Discussions 功能
+2. 打开 https://giscus.app ，填入仓库名生成配置
+3. 将生成的 `repo`、`repoId`、`category`、`categoryId` 填入 `giscus` 段，并把 `type` 改为 `'giscus'`
+
+评论展示范围：全部文章详情页底部 + 留言板页（`/guestbook`，内容在 `src/content/spec/guestbook.md`）。
+
 ### 修改主题色 / 样式
 
 - 主题色板（moon 蓝灰、sky 月光蓝）：`tailwind.config.mjs`
@@ -281,15 +296,18 @@ navLinks: [
 ├── src/
 │   ├── components/         # 组件
 │   │   ├── layout/         #   布局类（Navbar、Footer、Hero、卡片、BaseLayout）
+│   │   ├── comment/        #   评论系统（Comment 入口、Artalk、Giscus）
 │   │   ├── ui/             #   基础组件（SearchBox、Pagination、PagefindSearch）
 │   │   └── widgets/        #   组合组件（CategoryGrid、PostList）
 │   ├── config/
-│   │   └── site.ts         # ⭐ 站点配置（标题、导航、文章分类）——日常改这里
+│   │   ├── site.ts         # ⭐ 站点配置（标题、导航、文章分类）——日常改这里
+│   │   └── commentConfig.ts# 评论系统配置（Artalk / Giscus）
 │   ├── content/
 │   │   ├── posts/          # ⭐ 文章 Markdown（每天发文章写这里）
-│   │   └── resources/      # ⭐ 资源 Markdown（每天发资源写这里）
+│   │   ├── resources/      # ⭐ 资源 Markdown（每天发资源写这里）
+│   │   └── spec/           # 页面内容（about.md、guestbook.md）
 │   ├── content.config.ts   # 内容 schema 校验（文章分类 type 枚举也在这里）
-│   ├── pages/              # 路由页面（index / posts / resources / about / 404）
+│   ├── pages/              # 路由页面（index / posts / resources / about / guestbook / 404）
 │   ├── styles/             # 全局样式与主题变量
 │   ├── types/              # TypeScript 类型定义
 │   └── utils/              # 内容获取与格式化工具

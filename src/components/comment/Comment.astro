@@ -1,0 +1,34 @@
+---
+import { Icon } from 'astro-icon/components';
+import type { CollectionEntry } from 'astro:content';
+import { commentConfig } from '@/config/commentConfig';
+import Artalk from './Artalk.astro';
+import Giscus from './Giscus.astro';
+
+interface Props {
+  post?: CollectionEntry<'posts'>;
+  customPath?: string;
+}
+
+const { post, customPath } = Astro.props as Props;
+
+const slug = post ? post.id.replace(/\.(md|mdx)$/, '') : '';
+const pageKey = customPath ?? (post ? `/posts/${slug}` : '/');
+---
+
+{
+  commentConfig.type !== 'none' && (
+    <section class="glass-card relative mt-12 p-8">
+      <div class="relative z-10">
+        <div class="mb-6 flex items-center gap-3">
+          <Icon name="lucide:message-square" class="h-6 w-6 text-sky-glow" aria-hidden="true" />
+          <h2 class="text-xl font-bold text-moon-50">评论区</h2>
+        </div>
+        <div class="pl-1 pr-1">
+          {commentConfig.type === 'artalk' && <Artalk pageKey={pageKey} />}
+          {commentConfig.type === 'giscus' && <Giscus />}
+        </div>
+      </div>
+    </section>
+  )
+}
