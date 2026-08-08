@@ -36,4 +36,11 @@ const resources = defineCollection({
   }),
 });
 
-export const collections = { posts, resources };
+const spec = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string().default(''),
+  }),
+});
+
+export const collections = { posts, resources, spec };

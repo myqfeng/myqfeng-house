@@ -1,23 +1,18 @@
 ---
+import { getEntry, render } from 'astro:content';
 import BaseLayout from '@/components/layout/BaseLayout.astro';
 import PageHeader from '@/components/layout/PageHeader.astro';
 import { siteConfig } from '@/config/site';
+
+const aboutEntry = await getEntry('spec', 'about');
+const { Content } = await render(aboutEntry!);
 ---
 
 <BaseLayout title="关于" description={`关于 ${siteConfig.title}`}>
   <section class="mx-auto max-w-3xl px-4 py-12">
     <PageHeader title="关于" />
     <div class="glass-card p-8 prose prose-invert max-w-none">
-      <p>欢迎来到 <strong>{siteConfig.title}</strong>。</p>
-      <p>这是一个个人学习资源聚合站，用于收集、整理和分享学习过程中遇到的有价值内容。</p>
-      <h2 class="text-moon-50">站点内容</h2>
-      <ul>
-        <li><strong>原创文章：</strong> 个人学习笔记、技术总结与经验分享。</li>
-        <li><strong>转载文章：</strong> 收集自网络优质内容，版权归原作者所有，点击阅读原文可查看出处。</li>
-        <li><strong>资源下载：</strong> 提供软件、电子书、视频课程等下载链接，所有资源均托管在第三方平台。</li>
-      </ul>
-      <h2 class="text-moon-50">免责声明</h2>
-      <p>本站所有转载内容与资源链接均来自互联网，仅供学习交流使用。如有侵权，请联系删除。</p>
+      <Content />
     </div>
   </section>
 </BaseLayout>
