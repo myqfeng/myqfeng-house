@@ -19,7 +19,7 @@ export const siteConfig: SiteConfig = {
   favicon: ['/favicon.svg'],
 
   // 公告（显示在首页 Hero 顶部，留空则不显示）
-  announcement: '   ',
+  announcement: '欢迎来到明月清风的学习空间',
 
   // ── 导航栏 ────────────────────────────────────
   navLinks: [
