@@ -1,0 +1,18 @@
+# dependencies
+node_modules/
+
+# build output
+dist/
+.astro/
+
+# environment variables
+.env
+.env.*
+!.env.example
+
+# editor / os
+.DS_Store
+*.log
+
+# temp files
+.tmp-*
