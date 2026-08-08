@@ -4,10 +4,10 @@ import SearchBox from '@/components/ui/SearchBox.astro';
 import Pagination from '@/components/ui/Pagination.astro';
 import PostList from '@/components/widgets/PostList.astro';
 import { resourceTypes, siteConfig } from '@/data/site';
-import { getPosts, getResourceTypeCounts } from '@/utils/content';
+import { getPosts, getPostTypeCounts } from '@/utils/content';
 
 const posts = await getPosts();
-const counts = await getResourceTypeCounts();
+const counts = await getPostTypeCounts();
 const totalPages = Math.ceil(posts.length / siteConfig.pageSize);
 ---
 
@@ -27,7 +27,7 @@ const totalPages = Math.ceil(posts.length / siteConfig.pageSize);
     </div>
 
     <div class="mb-8">
-      <SearchBox placeholder="搜索文章标题、描述或标签..." />
+      <SearchBox placeholder="搜索文章标题、描述或标签..." label="搜索文章" filter={false} />
     </div>
 
     <PostList posts={posts} />

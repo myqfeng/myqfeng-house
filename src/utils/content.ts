@@ -28,7 +28,43 @@ export async function getResourcesByType(type: ResourceType) {
   return resources.filter((r) => r.data.type === type);
 }
 
+export async function getPostTypeCounts() {
+  const posts = await getPosts();
+  const counts: Record<ResourceType, number> = {
+    tutorial: 0,
+    tool: 0,
+    ebook: 0,
+    video: 0,
+    note: 0,
+    opensource: 0,
+  };
+
+  for (const post of posts) {
+    counts[post.data.type as ResourceType]++;
+  }
+
+  return counts;
+}
+
 export async function getResourceTypeCounts() {
+  const resources = await getResources();
+  const counts: Record<ResourceType, number> = {
+    tutorial: 0,
+    tool: 0,
+    ebook: 0,
+    video: 0,
+    note: 0,
+    opensource: 0,
+  };
+
+  for (const resource of resources) {
+    counts[resource.data.type as ResourceType]++;
+  }
+
+  return counts;
+}
+
+export async function getCombinedTypeCounts() {
   const posts = await getPosts();
   const resources = await getResources();
   const counts: Record<ResourceType, number> = {
