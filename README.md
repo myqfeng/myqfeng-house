@@ -200,6 +200,20 @@ navbar: {
 - `image`：`{ type: 'image', value: '/logo.png', alt: 'Logo' }`（图片放在 `public/` 下）
 - `icon`：`{ type: 'icon', value: '<svg>...</svg>' }`（内联 SVG 源码）
 
+**项目源码按钮**（搜索按钮旁，可选）：
+
+```typescript
+navbar: {
+  repo: {
+    url: 'https://github.com/myqfeng/myqfeng-house', // 项目地址
+    icon: 'simple-icons:github',                     // iconify 图标名，可换成任意图标
+    label: 'GitHub',                                 // 悬停提示文字
+  },
+},
+```
+
+`icon` 使用 iconify 图标名（`simple-icons:` 为品牌图标集合，`lucide:` 为通用图标集合），删除 `repo` 段即可隐藏按钮。
+
 ### 首页 Hero
 
 ```typescript

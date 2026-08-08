@@ -39,6 +39,12 @@ export const siteConfig: SiteConfig = {
       value: 'https://www.myqfeng.top/logo.png',
       alt: '站点 Logo',
     },
+    // 项目源码链接（显示在搜索按钮旁，icon 使用 iconify 图标名，如 simple-icons:github）
+    repo: {
+      url: 'https://github.com/myqfeng/myqfeng-house',
+      icon: 'simple-icons:github',
+      label: 'GitHub',
+    },
   },
 
   // ── 首页 Hero ─────────────────────────────────

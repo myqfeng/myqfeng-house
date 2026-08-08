@@ -33,6 +33,11 @@ export interface SiteConfig {
   navLinks: Array<{ name: string; url: string }>;
   navbar?: {
     logo?: NavLogo;
+    repo?: {
+      url: string;
+      icon?: string;
+      label?: string;
+    };
   };
   hero?: {
     eyebrow?: string;
