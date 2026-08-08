@@ -1,11 +1,41 @@
 ---
 import { siteConfig } from '@/config/site';
+
+const footer = siteConfig.footer ?? {};
+const socialLinks = siteConfig.socialLinks ?? [];
+const copyright = footer.copyright
+  ? `© ${new Date().getFullYear()} ${siteConfig.title}. ${footer.copyright}`
+  : `© ${new Date().getFullYear()} ${siteConfig.title}`;
 ---
 
 <footer class="site-footer border-t py-8">
-  <div class="mx-auto max-w-7xl px-4 text-center">
-    <p class="text-sm text-[var(--color-text-muted)]">
-      © {new Date().getFullYear()} {siteConfig.title}. 明月清风，静谧求知。
+  <div class="mx-auto max-w-7xl px-4">
+    {footer.links && footer.links.length > 0 && (
+      <nav class="mb-4 flex flex-wrap items-center justify-center gap-x-6 gap-y-2" aria-label="页脚链接">
+        {footer.links.map((link) => (
+          <a href={link.url} class="text-sm text-[var(--color-text-muted)] transition hover:text-sky-glow">
+            {link.label}
+          </a>
+        ))}
+      </nav>
+    )}
+
+    {footer.html && (
+      <div class="mb-4 text-center text-sm text-[var(--color-text-muted)]" set:html={footer.html} />
+    )}
+
+    {socialLinks.length > 0 && (
+      <div class="mb-4 flex items-center justify-center gap-6">
+        {socialLinks.map((link) => (
+          <a href={link.url} target="_blank" rel="noopener noreferrer" class="text-sm text-[var(--color-text-muted)] transition hover:text-sky-glow">
+            {link.label}
+          </a>
+        ))}
+      </div>
+    )}
+
+    <p class="text-center text-sm text-[var(--color-text-muted)]">
+      {copyright}
     </p>
   </div>
 </footer>

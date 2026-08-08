@@ -1,19 +1,76 @@
 // src/config/site.ts
+// 站点配置中心：所有可自定义项都在这里调整
 import type { SiteConfig, PostTypeInfo } from '@/types';
 
 export const siteConfig: SiteConfig = {
+  // ── 站点基本信息 ──────────────────────────────
   title: '明月清风的小屋',
   subtitle: '收集星光，分享知识',
   description: '一个专注于学习资源收集与分享的个人站点，包含原创文章、转载文章与各类资源下载链接。',
-  siteUrl: 'https://example.com',
+  siteUrl: 'https://example.com', // ⚠️ 部署前替换为你的真实域名
   author: '站长',
-  pageSize: 12,
+  pageSize: 12, // 文章/资源每页显示条数
+
+  // SEO 关键词（用于 <meta name="keywords">）
+  keywords: ['明月清风', '学习资源', '博客', '教程', '资源下载'],
+
+  // 网站图标（favicon），支持多个：浏览器按顺序使用匹配的尺寸
+  // 默认使用 public/favicon.svg，可替换为自己的图标文件
+  favicon: ['/favicon.svg'],
+
+  // 公告（显示在首页 Hero 顶部，留空则不显示）
+  announcement: '本站持续收录优质学习资源，欢迎收藏！',
+
+  // ── 导航栏 ────────────────────────────────────
   navLinks: [
     { name: '首页', url: '/' },
     { name: '文章', url: '/posts' },
     { name: '资源', url: '/resources' },
     { name: '关于', url: '/about' },
   ],
+  navbar: {
+    // Header 图标（Logo）三种类型：
+    //   emoji: { type: 'emoji', value: '🌙' }
+    //   image: { type: 'image', value: '/logo.png', alt: 'Logo' }
+    //   icon : { type: 'icon', value: '<svg>...</svg>', alt: 'Logo' }  内联 SVG
+    logo: {
+      type: 'icon',
+      value: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.7 15.2A8.5 8.5 0 0 1 8.8 3.3 8.5 8.5 0 1 0 20.7 15.2Z"/></svg>',
+      alt: '站点 Logo',
+    },
+  },
+
+  // ── 首页 Hero ─────────────────────────────────
+  hero: {
+    eyebrow: 'MYQFENG · LEARNING HUB', // Hero 眉题（留空不显示）
+    buttons: [
+      { label: '开始探索', url: '/posts', style: 'primary' },
+      { label: '资源下载', url: '/resources', style: 'ghost' },
+    ],
+  },
+
+  // ── 社交链接（显示在页脚）─────────────────────
+  socialLinks: [
+    { label: 'GitHub', url: 'https://github.com/' },
+    { label: '邮箱', url: 'mailto:hello@example.com' },
+  ],
+
+  // ── 页脚 ──────────────────────────────────────
+  footer: {
+    // 自定义 HTML，直接注入页脚（可放备案号等，留空不显示）
+    html: '',
+    // 页脚链接组
+    links: [{ label: '关于本站', url: '/about' }],
+    // 版权文案（默认自动为 © 年份 站点名）
+    copyright: '明月清风，静谧求知。',
+  },
+
+  // ── 统计代码（可选）───────────────────────────
+  // 例如百度统计 / 谷歌分析等，填入对应脚本片段即可
+  analytics: {
+    head: '',
+    body: '',
+  },
 };
 
 // 文章分类体系（资源不分类，仅使用 tags 标签）

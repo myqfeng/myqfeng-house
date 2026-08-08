@@ -1,14 +1,26 @@
 ---
 import { siteConfig } from '@/config/site';
 import PagefindSearch from '@/components/ui/PagefindSearch.astro';
+
+const logo = siteConfig.navbar?.logo;
+const renderLogo = (() => {
+  if (!logo) return null;
+  if (logo.type === 'emoji') {
+    return { html: `<span class="navbar-logo-emoji">${logo.value}</span>` };
+  }
+  if (logo.type === 'image') {
+    return { html: `<img src="${logo.value}" alt="${logo.alt || ''}" class="navbar-logo-img" />` };
+  }
+  return { html: logo.value }; // icon：内联 SVG
+})();
 ---
 
 <header class="site-header sticky top-0 z-50 border-b backdrop-blur-md">
   <nav class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4">
     <a href="/" class="site-brand flex items-center gap-2 text-xl font-bold hover:text-sky-glow">
-      <svg class="h-6 w-6" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-        <path d="M20.7 15.2A8.5 8.5 0 0 1 8.8 3.3 8.5 8.5 0 1 0 20.7 15.2Z" />
-      </svg>
+      {renderLogo && (
+        <span class="navbar-logo flex h-6 w-6 items-center justify-center" set:html={renderLogo.html} />
+      )}
       <span>{siteConfig.title}</span>
     </a>
 
@@ -69,5 +81,19 @@ import PagefindSearch from '@/components/ui/PagefindSearch.astro';
   }
   .site-nav-link {
     color: var(--color-text-muted);
+  }
+  .navbar-logo svg {
+    width: 100%;
+    height: 100%;
+  }
+  .navbar-logo-img {
+    width: 1.5rem;
+    height: 1.5rem;
+    object-fit: contain;
+    border-radius: 0.3rem;
+  }
+  .navbar-logo-emoji {
+    font-size: 1.35rem;
+    line-height: 1;
   }
 </style>

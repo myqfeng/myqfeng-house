@@ -14,6 +14,9 @@ interface Props {
 const { title, description, pagefindIgnore = false } = Astro.props;
 const pageTitle = title ? `${title} | ${siteConfig.title}` : siteConfig.title;
 const pageDescription = description || siteConfig.description;
+const favicons = siteConfig.favicon ?? ['/favicon.svg'];
+const keywords = siteConfig.keywords?.join(', ');
+const analyticsHead = siteConfig.analytics?.head ?? '';
 ---
 
 <!DOCTYPE html>
@@ -22,15 +25,20 @@ const pageDescription = description || siteConfig.description;
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={pageDescription} />
+    {keywords && <meta name="keywords" content={keywords} />}
     <title>{pageTitle}</title>
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={pageDescription} />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={siteConfig.title} />
     <meta property="og:url" content={`${siteConfig.siteUrl}${Astro.url.pathname}`} />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    {favicons.map((icon) => (
+      <link rel="icon" href={icon} />
+    ))}
+    {analyticsHead && <Fragment set:html={analyticsHead} />}
   </head>
   <body class="flex min-h-screen flex-col">
+    {siteConfig.analytics?.body && <Fragment set:html={siteConfig.analytics.body} />}
     <ScrollProgress />
     <Navbar />
     <main class="flex-1">
