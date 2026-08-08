@@ -1,10 +1,56 @@
 ---
 import BaseLayout from '@/components/layout/BaseLayout.astro';
+import SearchBox from '@/components/ui/SearchBox.astro';
+import ResourceCard from '@/components/layout/ResourceCard.astro';
+import Pagination from '@/components/ui/Pagination.astro';
+import { getResources, getResourceTypeCounts } from '@/utils/content';
+import { resourceTypes, siteConfig } from '@/data/site';
+
+const resources = await getResources();
+const counts = await getResourceTypeCounts();
+
+const url = new URL(Astro.request.url);
+const currentType = url.searchParams.get('type') || 'all';
+const currentPage = Math.max(1, parseInt(url.searchParams.get('page') || '1', 10));
+
+const filteredResources = currentType === 'all'
+  ? resources
+  : resources.filter((r) => r.data.type === currentType);
+
+const totalPages = Math.ceil(filteredResources.length / siteConfig.pageSize);
+const paginatedResources = filteredResources.slice(
+  (currentPage - 1) * siteConfig.pageSize,
+  currentPage * siteConfig.pageSize
+);
 ---
 
-<BaseLayout title="资源" description="学习资源下载链接">
-  <section class="mx-auto max-w-4xl px-4 py-16 text-center">
-    <h1 class="mb-4 text-3xl font-bold text-moon-50">资源下载建设中</h1>
-    <p class="text-moon-300">后续任务会在这里展示软件下载、网盘链接和资源标签。</p>
+<BaseLayout title="资源下载" description="精选学习资源下载链接">
+  <section class="mx-auto max-w-7xl px-4 py-12">
+    <h1 class="mb-8 text-3xl font-bold text-moon-50">资源下载</h1>
+
+    <div class="mb-6 flex flex-wrap gap-2">
+      <a href="/resources" class={`rounded-full px-4 py-1.5 text-sm font-medium transition ${currentType === 'all' ? 'bg-sky-bright text-moon-900' : 'bg-moon-800 text-moon-200 hover:bg-moon-700'}`}>
+        全部 ({resources.length})
+      </a>
+      {resourceTypes.map((type) => (
+        <a href={`/resources?type=${type.id}`} class={`rounded-full px-4 py-1.5 text-sm font-medium transition ${currentType === type.id ? 'bg-sky-bright text-moon-900' : 'bg-moon-800 text-moon-200 hover:bg-moon-700'}`}>
+          {type.name} ({counts[type.id] || 0})
+        </a>
+      ))}
+    </div>
+
+    <div class="mb-8">
+      <SearchBox id="resource-search" placeholder="搜索资源标题、描述或标签..." />
+    </div>
+
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3" id="resource-grid">
+      {paginatedResources.map((resource) => (
+        <div data-searchable={`${resource.data.title} ${resource.data.description} ${resource.data.tags.join(' ')}`}>
+          <ResourceCard resource={resource} />
+        </div>
+      ))}
+    </div>
+
+    <Pagination currentPage={currentPage} totalPages={totalPages} baseUrl={`/resources?type=${currentType}`} />
   </section>
 </BaseLayout>
