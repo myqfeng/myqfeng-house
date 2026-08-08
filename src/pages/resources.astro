@@ -45,47 +45,49 @@ const tags = Object.keys(tagCounts).sort((a, b) => tagCounts[b] - tagCounts[a]);
   </section>
 </BaseLayout>
 
-<script is:inline>
-  const cards = Array.from(document.querySelectorAll('#resource-grid [data-tags]'));
-  const tagFilters = Array.from(document.querySelectorAll('[data-tag-filter]'));
-  const input = document.getElementById('resource-search');
-  const emptyState = document.createElement('p');
-  emptyState.className = 'py-12 text-center text-moon-300';
-  emptyState.textContent = '没有找到符合条件的资源。';
-  emptyState.hidden = true;
-  document.getElementById('resource-grid')?.after(emptyState);
+<script is:inline data-astro-rerun>
+  (() => {
+    const cards = Array.from(document.querySelectorAll('#resource-grid [data-tags]'));
+    const tagFilters = Array.from(document.querySelectorAll('[data-tag-filter]'));
+    const input = document.getElementById('resource-search');
+    const emptyState = document.createElement('p');
+    emptyState.className = 'py-12 text-center text-moon-300';
+    emptyState.textContent = '没有找到符合条件的资源。';
+    emptyState.hidden = true;
+    document.getElementById('resource-grid')?.after(emptyState);
 
-  const activeClass = ['bg-sky-bright', 'text-moon-900'];
-  const inactiveClass = ['bg-moon-800', 'text-moon-200', 'hover:bg-moon-700'];
+    const activeClass = ['bg-sky-bright', 'text-moon-900'];
+    const inactiveClass = ['bg-moon-800', 'text-moon-200', 'hover:bg-moon-700'];
 
-  function applyState() {
-    const selectedTag = tagFilters.find((button) => button.classList.contains('bg-sky-bright'))?.getAttribute('data-tag-filter') || 'all';
-    const search = input?.value.toLowerCase().trim() || '';
-    let visible = 0;
+    function applyState() {
+      const selectedTag = tagFilters.find((button) => button.classList.contains('bg-sky-bright'))?.getAttribute('data-tag-filter') || 'all';
+      const search = input?.value.toLowerCase().trim() || '';
+      let visible = 0;
 
-    cards.forEach((card) => {
-      const tags = (card.getAttribute('data-tags') || '').toLowerCase();
-      const text = card.getAttribute('data-searchable')?.toLowerCase() || '';
-      const matchesTag = selectedTag === 'all' || tags.split(' ').includes(selectedTag);
-      const matchesSearch = text.includes(search);
-      const show = matchesTag && matchesSearch;
-      card.classList.toggle('hidden', !show);
-      if (show) visible += 1;
-    });
-
-    emptyState.hidden = visible > 0;
-  }
-
-  tagFilters.forEach((button) => {
-    button.addEventListener('click', () => {
-      tagFilters.forEach((other) => {
-        other.classList.toggle(activeClass[0], other === button);
-        other.classList.toggle(activeClass[1], other === button);
-        inactiveClass.forEach((className) => other.classList.toggle(className, other !== button));
+      cards.forEach((card) => {
+        const tags = (card.getAttribute('data-tags') || '').toLowerCase();
+        const text = card.getAttribute('data-searchable')?.toLowerCase() || '';
+        const matchesTag = selectedTag === 'all' || tags.split(' ').includes(selectedTag);
+        const matchesSearch = text.includes(search);
+        const show = matchesTag && matchesSearch;
+        card.classList.toggle('hidden', !show);
+        if (show) visible += 1;
       });
-      applyState();
-    });
-  });
 
-  input?.addEventListener('input', applyState);
+      emptyState.hidden = visible > 0;
+    }
+
+    tagFilters.forEach((button) => {
+      button.addEventListener('click', () => {
+        tagFilters.forEach((other) => {
+          other.classList.toggle(activeClass[0], other === button);
+          other.classList.toggle(activeClass[1], other === button);
+          inactiveClass.forEach((className) => other.classList.toggle(className, other !== button));
+        });
+        applyState();
+      });
+    });
+
+    input?.addEventListener('input', applyState);
+  })();
 </script>

@@ -38,7 +38,7 @@ const resultsId = `search-results-${id}`;
   </div>
 </dialog>
 
-<script is:inline define:vars={{ triggerId, dialogId, inputId, closeId, statusId, resultsId }}>
+<script is:inline data-astro-rerun define:vars={{ triggerId, dialogId, inputId, closeId, statusId, resultsId }}>
   (() => {
     const trigger = document.getElementById(triggerId);
     const dialog = document.getElementById(dialogId);

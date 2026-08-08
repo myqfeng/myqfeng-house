@@ -85,82 +85,89 @@ const iconPaths: Record<string, string[]> = {
   </section>
 </BaseLayout>
 
-<script is:inline define:vars={{ pageSize: siteConfig.pageSize, validTypes: postTypes.map((type) => type.id) }}>
-  const params = new URLSearchParams(window.location.search);
-  const hasType = params.has('type');
-  document.querySelector('[data-radial-nav]')?.classList.toggle('hidden', hasType);
-  document.querySelector('[data-posts-list]')?.classList.toggle('hidden', !hasType);
+<script
+  is:inline
+  data-astro-rerun
+  data-page-size={siteConfig.pageSize}
+  data-valid-types={JSON.stringify(postTypes.map((type) => type.id))}
+>
+  (() => {
+    const script = document.currentScript;
+    const pageSize = Number(script?.dataset.pageSize || '12');
+    const validTypes = JSON.parse(script?.dataset.validTypes || '[]');
+    const params = new URLSearchParams(window.location.search);
+    const hasType = params.has('type');
+    document.querySelector('[data-radial-nav]')?.classList.toggle('hidden', hasType);
+    document.querySelector('[data-posts-list]')?.classList.toggle('hidden', !hasType);
 
-  const cards = Array.from(document.querySelectorAll('[data-searchable]'));
-  const filters = Array.from(document.querySelectorAll('[data-type-filter]'));
-  const input = document.getElementById('search');
-  const pagination = document.querySelector('[data-pagination]');
-  const emptyState = document.querySelector('[data-empty-state]');
-  const activeClass = ['bg-sky-bright', 'text-moon-900'];
-  const inactiveClass = ['bg-moon-800', 'text-moon-200', 'hover:bg-moon-700'];
-  const activeCardClass = ['border-sky-bright/70', 'ring-1', 'ring-sky-bright'];
+    const cards = Array.from(document.querySelectorAll('[data-searchable]'));
+    const filters = Array.from(document.querySelectorAll('[data-type-filter]'));
+    const input = document.getElementById('search');
+    const pagination = document.querySelector('[data-pagination]');
+    const emptyState = document.querySelector('[data-empty-state]');
+    const activeCardClass = ['border-sky-bright/70', 'ring-1', 'ring-sky-bright'];
 
-  function pageHref(type, page) {
-    const next = new URLSearchParams();
-    if (type !== 'all') next.set('type', type);
-    if (page > 1) next.set('page', String(page));
-    const query = next.toString();
-    return query ? `/posts?${query}` : '/posts';
-  }
+    function pageHref(type, page) {
+      const next = new URLSearchParams();
+      next.set('type', type);
+      if (page > 1) next.set('page', String(page));
+      return `/posts?${next.toString()}`;
+    }
 
-  function renderPagination(type, currentPage, totalPages) {
-    if (!pagination) return;
-    pagination.classList.toggle('hidden', totalPages <= 1);
-    pagination.innerHTML = '';
-    if (totalPages <= 1) return;
+    function renderPagination(type, currentPage, totalPages) {
+      if (!pagination) return;
+      pagination.classList.toggle('hidden', totalPages <= 1);
+      pagination.innerHTML = '';
+      if (totalPages <= 1) return;
 
-    const pages = [];
-    if (currentPage > 1) pages.push({ label: '上一页', page: currentPage - 1 });
-    for (let page = 1; page <= totalPages; page += 1) pages.push({ label: String(page), page });
-    if (currentPage < totalPages) pages.push({ label: '下一页', page: currentPage + 1 });
+      const pages = [];
+      if (currentPage > 1) pages.push({ label: '上一页', page: currentPage - 1 });
+      for (let page = 1; page <= totalPages; page += 1) pages.push({ label: String(page), page });
+      if (currentPage < totalPages) pages.push({ label: '下一页', page: currentPage + 1 });
 
-    pages.forEach(({ label, page }) => {
-      const link = document.createElement('a');
-      const isCurrent = page === currentPage && label === String(page);
-      link.href = pageHref(type, page);
-      link.textContent = label;
-      link.className = `rounded-lg px-4 py-2 ${isCurrent ? 'bg-sky-bright text-moon-900' : 'bg-moon-800 text-moon-200 hover:bg-moon-700 hover:text-sky-glow'}`;
-      if (isCurrent) link.setAttribute('aria-current', 'page');
-      pagination.append(link);
+      pages.forEach(({ label, page }) => {
+        const link = document.createElement('a');
+        const isCurrent = page === currentPage && label === String(page);
+        link.href = pageHref(type, page);
+        link.textContent = label;
+        link.className = `rounded-lg px-4 py-2 ${isCurrent ? 'bg-sky-bright text-moon-900' : 'bg-moon-800 text-moon-200 hover:bg-moon-700 hover:text-sky-glow'}`;
+        if (isCurrent) link.setAttribute('aria-current', 'page');
+        pagination.append(link);
+      });
+    }
+
+    function applyState() {
+      const rawType = params.get('type') || 'all';
+      const type = validTypes.includes(rawType) ? rawType : 'all';
+      const search = input?.value.toLowerCase().trim() || '';
+      const matchingCards = cards.filter((card) => {
+        const matchesType = type === 'all' || card.getAttribute('data-type') === type;
+        const text = card.getAttribute('data-searchable')?.toLowerCase() || '';
+        return matchesType && text.includes(search);
+      });
+      const totalPages = Math.ceil(matchingCards.length / pageSize);
+      const requestedPage = Number.parseInt(params.get('page') || '1', 10);
+      const currentPage = Math.min(Math.max(Number.isNaN(requestedPage) ? 1 : requestedPage, 1), Math.max(totalPages, 1));
+      const firstIndex = (currentPage - 1) * pageSize;
+      const visibleCards = new Set(matchingCards.slice(firstIndex, firstIndex + pageSize));
+
+      cards.forEach((card) => card.classList.toggle('hidden', !visibleCards.has(card)));
+      emptyState?.classList.toggle('hidden', matchingCards.length > 0);
+
+      filters.forEach((filter) => {
+        const isActive = filter.getAttribute('data-type-filter') === type;
+        activeCardClass.forEach((className) => filter.classList.toggle(className, isActive));
+      });
+
+      renderPagination(type, currentPage, totalPages);
+    }
+
+    input?.addEventListener('input', () => {
+      params.delete('page');
+      applyState();
     });
-  }
-
-  function applyState() {
-    const rawType = params.get('type') || 'all';
-    const type = validTypes.includes(rawType) ? rawType : 'all';
-    const search = input?.value.toLowerCase().trim() || '';
-    const matchingCards = cards.filter((card) => {
-      const matchesType = type === 'all' || card.getAttribute('data-type') === type;
-      const text = card.getAttribute('data-searchable')?.toLowerCase() || '';
-      return matchesType && text.includes(search);
-    });
-    const totalPages = Math.ceil(matchingCards.length / pageSize);
-    const requestedPage = Number.parseInt(params.get('page') || '1', 10);
-    const currentPage = Math.min(Math.max(Number.isNaN(requestedPage) ? 1 : requestedPage, 1), Math.max(totalPages, 1));
-    const firstIndex = (currentPage - 1) * pageSize;
-    const visibleCards = new Set(matchingCards.slice(firstIndex, firstIndex + pageSize));
-
-    cards.forEach((card) => card.classList.toggle('hidden', !visibleCards.has(card)));
-    emptyState?.classList.toggle('hidden', matchingCards.length > 0);
-
-    filters.forEach((filter) => {
-      const isActive = filter.getAttribute('data-type-filter') === type;
-      activeCardClass.forEach((className) => filter.classList.toggle(className, isActive));
-    });
-
-    renderPagination(type, currentPage, totalPages);
-  }
-
-  input?.addEventListener('input', () => {
-    params.delete('page');
     applyState();
-  });
-  applyState();
+  })();
 </script>
 
 <style is:global>

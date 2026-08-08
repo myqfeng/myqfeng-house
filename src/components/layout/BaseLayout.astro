@@ -50,7 +50,7 @@ const analyticsHead = siteConfig.analytics?.head ?? '';
       <slot />
     </main>
     <Footer />
-    <script is:inline>
+    <script is:inline data-astro-rerun>
       (() => {
         const els = document.querySelectorAll('.reveal');
         if (!els.length) return;

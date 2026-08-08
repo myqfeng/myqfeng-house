@@ -19,7 +19,7 @@ export const siteConfig: SiteConfig = {
   favicon: ['/favicon.svg'],
 
   // 公告（显示在首页 Hero 顶部，留空则不显示）
-  announcement: '',
+  announcement: '   ',
 
   // ── 导航栏 ────────────────────────────────────
   navLinks: [
@@ -78,7 +78,6 @@ export const postTypes: PostTypeInfo[] = [
   { id: 'ebook', name: '电子书/PDF', icon: 'lucide:book', description: '电子书籍与 PDF 文档' },
   { id: 'video', name: '视频课程', icon: 'lucide:play-circle', description: '优质视频教程' },
   { id: 'note', name: '笔记资料', icon: 'lucide:notebook', description: '学习笔记与资料整理' },
-  { id: 'opensource', name: '开源项目', icon: 'lucide:code', description: '值得学习的开源项目' },
 ];
 
 export function getPostTypeById(id: string): PostTypeInfo | undefined {

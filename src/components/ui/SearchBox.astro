@@ -22,16 +22,18 @@ const { id = 'search', placeholder = '搜索文章...', label = '搜索', filter
   </svg>
 </div>
 
-<script is:inline define:vars={{ id, filter }}>
-  const input = document.getElementById(id);
-  if (input && filter) {
-    input.addEventListener('input', (event) => {
-      const value = event.target.value.toLowerCase().trim();
-      const cards = document.querySelectorAll('[data-searchable]');
-      cards.forEach((card) => {
-        const text = card.getAttribute('data-searchable')?.toLowerCase() || '';
-        card.classList.toggle('hidden', !text.includes(value));
+<script is:inline data-astro-rerun define:vars={{ id, filter }}>
+  (() => {
+    const input = document.getElementById(id);
+    if (input && filter) {
+      input.addEventListener('input', (event) => {
+        const value = event.target.value.toLowerCase().trim();
+        const cards = document.querySelectorAll('[data-searchable]');
+        cards.forEach((card) => {
+          const text = card.getAttribute('data-searchable')?.toLowerCase() || '';
+          card.classList.toggle('hidden', !text.includes(value));
+        });
       });
-    });
-  }
+    }
+  })();
 </script>
