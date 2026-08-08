@@ -19,7 +19,7 @@ export const siteConfig: SiteConfig = {
   favicon: ['/favicon.svg'],
 
   // 公告（显示在首页 Hero 顶部，留空则不显示）
-  announcement: '本站持续收录优质学习资源，欢迎收藏！',
+  announcement: '',
 
   // ── 导航栏 ────────────────────────────────────
   navLinks: [
@@ -51,16 +51,15 @@ export const siteConfig: SiteConfig = {
 
   // ── 社交链接（显示在页脚）─────────────────────
   socialLinks: [
-    { label: 'GitHub', url: 'https://github.com/' },
-    { label: '邮箱', url: 'mailto:hello@example.com' },
+    { label: 'GITHUB', url: 'https://github.com/myqfeng' },
+    { label: 'GITEE', url: 'https://gitee.com/myqfeng' },
+    { label: 'BILIBILI', url: 'https://space.bilibili.com/558600071' },
+    { label: 'E-MAIL', url: 'mailto:viagrahuang@outlook.com' },
   ],
 
   // ── 页脚 ──────────────────────────────────────
   // 页脚自定义 HTML 请直接编辑 src/config/footer.html 文件
   footer: {
-    // 页脚链接组
-    links: [{ label: '关于本站', url: '/about' }],
-    // 版权文案（默认自动为 © 年份 站点名）
     copyright: 'All rights reserved.',
   },
 
