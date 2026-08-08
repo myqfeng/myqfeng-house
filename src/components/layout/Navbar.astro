@@ -17,25 +17,25 @@ const renderLogo = (() => {
 
 <header class="site-header sticky top-0 z-50 border-b backdrop-blur-md">
   <nav class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4">
-    <a href="/" class="site-brand flex items-center gap-2 text-xl font-bold hover:text-sky-glow">
+    <a href="/" class="site-brand flex items-center gap-2.5 text-2xl font-bold hover:text-sky-glow">
       {renderLogo && (
-        <span class="navbar-logo flex h-6 w-6 items-center justify-center" set:html={renderLogo.html} />
+        <span class="navbar-logo flex h-8 w-8 items-center justify-center" set:html={renderLogo.html} />
       )}
       <span>{siteConfig.title}</span>
     </a>
 
-    <div class="hidden items-center gap-8 md:flex">
+    <div class="hidden items-center gap-9 md:flex">
       {siteConfig.navLinks.map((link) => (
-        <a href={link.url} class="site-nav-link text-sm font-medium transition hover:text-sky-glow">
+        <a href={link.url} class="site-nav-link text-base font-medium transition hover:text-sky-glow">
           {link.name}
         </a>
       ))}
     </div>
 
-    <div class="flex items-center gap-1">
+    <div class="flex items-center gap-2">
       <PagefindSearch />
       <button type="button" class="site-nav-link md:hidden" aria-label="菜单" aria-expanded="false" aria-controls="mobile-menu" id="mobile-menu-btn">
-        <svg class="h-6 w-6" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <svg class="h-7 w-7" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M4 6h16M4 12h16M4 18h16" />
         </svg>
       </button>
@@ -87,13 +87,13 @@ const renderLogo = (() => {
     height: 100%;
   }
   .navbar-logo-img {
-    width: 1.5rem;
-    height: 1.5rem;
+    width: 2rem;
+    height: 2rem;
     object-fit: contain;
     border-radius: 0.3rem;
   }
   .navbar-logo-emoji {
-    font-size: 1.35rem;
+    font-size: 1.7rem;
     line-height: 1;
   }
 </style>
