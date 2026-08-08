@@ -1,4 +1,4 @@
-// src/data/site.ts
+// src/config/site.ts
 import type { SiteConfig, ResourceTypeInfo } from '@/types';
 
 export const siteConfig: SiteConfig = {

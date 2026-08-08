@@ -1,7 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '@/components/layout/BaseLayout.astro';
-import { getResourceTypeById } from '@/data/site';
+import { getResourceTypeById } from '@/config/site';
 import { formatDate } from '@/utils/format';
 
 export async function getStaticPaths() {

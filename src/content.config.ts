@@ -1,5 +1,5 @@
 import { defineCollection, z } from 'astro:content';
-import { resourceTypes } from '@/data/site';
+import { resourceTypes } from '@/config/site';
 
 const resourceTypeIds = resourceTypes.map((t) => t.id) as [string, ...string[]];
 

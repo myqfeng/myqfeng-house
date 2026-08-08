@@ -3,7 +3,7 @@ import BaseLayout from '@/components/layout/BaseLayout.astro';
 import SearchBox from '@/components/ui/SearchBox.astro';
 import Pagination from '@/components/ui/Pagination.astro';
 import PostList from '@/components/widgets/PostList.astro';
-import { resourceTypes, siteConfig } from '@/data/site';
+import { resourceTypes, siteConfig } from '@/config/site';
 import { getPosts, getPostTypeCounts } from '@/utils/content';
 
 const posts = await getPosts();

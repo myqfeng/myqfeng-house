@@ -147,7 +147,7 @@ pinned: false
 
 ## 修改站点信息配置
 
-站点级配置集中在 **`src/data/site.ts`**，修改后保存即可，无需改动其他代码。
+站点级配置集中在 **`src/config/site.ts`**，修改后保存即可，无需改动其他代码。
 
 ```typescript
 export const siteConfig: SiteConfig = {
@@ -218,6 +218,6 @@ pnpm build
 
 部署前请确认：
 
-1. **`src/data/site.ts` 中的 `siteUrl` 已替换为你的真实域名**（影响 SEO 与 Pagefind 索引）。
+1. **`src/config/site.ts` 中的 `siteUrl` 已替换为你的真实域名**（影响 SEO 与 Pagefind 索引）。
 2. `pnpm build` 构建成功且 `dist/pagefind/` 目录已生成。
 3. 若部署在子路径下（如 GitHub Pages 的 `https://user.github.io/repo/`），需要在 `astro.config.mjs` 中设置 `base` 配置。
