@@ -1,6 +1,6 @@
 ---
-title: "简述原码、反码与补码"
-description: "一篇讲透计算机有符号数表示法的科普文章"
+title: "原码、反码与补码：计算机是如何\"算计\"正负数的？"
+description: "一篇讲透计算机有符号数表示法"
 published: 2026-08-08
 author: "Myqfeng"
 source: "original"
