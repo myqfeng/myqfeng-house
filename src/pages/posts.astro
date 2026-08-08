@@ -11,6 +11,17 @@ const posts = await getPosts();
 const counts = await getPostTypeCounts();
 const totalPages = Math.ceil(posts.length / siteConfig.pageSize);
 
+const RADIUS = 220;
+const radialButtons = postTypes.map((type, index) => {
+  const angle = -Math.PI / 2 + (index * 2 * Math.PI) / postTypes.length;
+  return {
+    ...type,
+    tx: Math.round(Math.cos(angle) * RADIUS),
+    ty: Math.round(Math.sin(angle) * RADIUS),
+    delay: `${0.15 + index * 0.12}s`,
+  };
+});
+
 const iconPaths: Record<string, string[]> = {
   'lucide:book-open': ['M12 7v14', 'M3 5.5A2.5 2.5 0 0 1 5.5 3H12v18H5.5A2.5 2.5 0 0 1 3 18.5z', 'M21 5.5A2.5 2.5 0 0 0 18.5 3H12v18h6.5a2.5 2.5 0 0 0 2.5-2.5z'],
   'lucide:wrench': ['M14.7 6.3a4 4 0 0 0-5 5L3 18l3 3 6.7-6.7a4 4 0 0 0 5-5l-2.9 2.9-3-3z'],
@@ -25,35 +36,61 @@ const iconPaths: Record<string, string[]> = {
   <section class="mx-auto max-w-7xl px-4 py-12">
     <PageHeader title="文章" />
 
-    <div class="reveal mb-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6" style="--reveal-delay: 0ms">
-      <a href="/posts" data-type-filter="all" class="glass-card group flex flex-col items-center gap-2 p-4 text-center transition hover:-translate-y-1 hover:border-sky-bright/50">
-        <span class="text-lg font-semibold text-moon-50 group-hover:text-sky-glow">全部</span>
-        <span class="text-sm text-moon-300">{posts.length} 篇</span>
+    <div class="radial-wrap" data-radial-nav>
+      <a href="/posts?type=all" class="radial-center">
+        <span class="text-lg font-bold text-moon-900">所有文章</span>
+        <span class="text-xs text-moon-700">共 {posts.length} 篇</span>
       </a>
-      {postTypes.map((type) => (
-        <a href={`/posts?type=${type.id}`} data-type-filter={type.id} class="glass-card group flex flex-col items-center gap-2 p-4 text-center transition hover:-translate-y-1 hover:border-sky-bright/50">
-          <svg class="h-7 w-7 text-sky-glow" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            {(iconPaths[type.icon] ?? iconPaths['lucide:book-open']).map((path) => <path d={path} />)}
+      {radialButtons.map((button) => (
+        <a
+          href={`/posts?type=${button.id}`}
+          class="radial-btn glass-card"
+          style={`--tx: ${button.tx}px; --ty: ${button.ty}px; --reveal-delay: ${button.delay}`}
+        >
+          <svg class="h-8 w-8 text-sky-glow" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            {(iconPaths[button.icon] ?? iconPaths['lucide:book-open']).map((path) => <path d={path} />)}
           </svg>
-          <span class="text-sm font-semibold text-moon-50 group-hover:text-sky-glow">{type.name}</span>
-          <span class="text-xs text-moon-300">{counts[type.id] || 0} 篇</span>
+          <span class="text-sm font-semibold text-moon-50">{button.name}</span>
+          <span class="text-xs text-moon-300">{counts[button.id] || 0} 篇</span>
         </a>
       ))}
     </div>
 
-    <div class="mb-8">
-      <SearchBox placeholder="搜索文章标题、描述或标签..." label="搜索文章" filter={false} />
+    <div class="hidden" data-posts-list>
+      <div class="reveal mb-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6" style="--reveal-delay: 0ms">
+        <a href="/posts?type=all" data-type-filter="all" class="glass-card group flex flex-col items-center gap-2 p-4 text-center transition hover:-translate-y-1 hover:border-sky-bright/50">
+          <span class="text-lg font-semibold text-moon-50 group-hover:text-sky-glow">全部</span>
+          <span class="text-sm text-moon-300">{posts.length} 篇</span>
+        </a>
+        {postTypes.map((type) => (
+          <a href={`/posts?type=${type.id}`} data-type-filter={type.id} class="glass-card group flex flex-col items-center gap-2 p-4 text-center transition hover:-translate-y-1 hover:border-sky-bright/50">
+            <svg class="h-7 w-7 text-sky-glow" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              {(iconPaths[type.icon] ?? iconPaths['lucide:book-open']).map((path) => <path d={path} />)}
+            </svg>
+            <span class="text-sm font-semibold text-moon-50 group-hover:text-sky-glow">{type.name}</span>
+            <span class="text-xs text-moon-300">{counts[type.id] || 0} 篇</span>
+          </a>
+        ))}
+      </div>
+
+      <div class="mb-8">
+        <SearchBox placeholder="搜索文章标题、描述或标签..." label="搜索文章" filter={false} />
+      </div>
+
+      <PostList posts={posts} />
+      <p class="hidden py-12 text-center text-moon-300" data-empty-state>暂时没有符合条件的文章。</p>
+
+      <Pagination currentPage={1} totalPages={totalPages} baseUrl="/posts" />
     </div>
-
-    <PostList posts={posts} />
-    <p class="hidden py-12 text-center text-moon-300" data-empty-state>暂时没有符合条件的文章。</p>
-
-    <Pagination currentPage={1} totalPages={totalPages} baseUrl="/posts" />
   </section>
 </BaseLayout>
 
 <script is:inline define:vars={{ pageSize: siteConfig.pageSize, validTypes: postTypes.map((type) => type.id) }}>
   const params = new URLSearchParams(window.location.search);
+  const hasType = params.has('type');
+  document.querySelector('[data-radial-nav]')?.classList.toggle('hidden', hasType);
+  document.querySelector('[data-posts-list]')?.classList.toggle('hidden', !hasType);
+
   const cards = Array.from(document.querySelectorAll('[data-searchable]'));
   const filters = Array.from(document.querySelectorAll('[data-type-filter]'));
   const input = document.getElementById('search');
@@ -125,3 +162,125 @@ const iconPaths: Record<string, string[]> = {
   });
   applyState();
 </script>
+
+<style is:global>
+  .radial-wrap {
+    position: relative;
+    margin: 0 auto;
+    height: 72vh;
+    max-width: 900px;
+  }
+
+  .radial-center {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.35rem;
+    border-radius: 9999px;
+    background: var(--color-accent);
+    color: #0f172a;
+    padding: 1.5rem 3rem;
+    box-shadow: 0 0 40px rgba(96, 165, 250, 0.4);
+    animation-name: center-in;
+    animation-duration: 0.8s;
+    animation-timing-function: cubic-bezier(0.65, 0.05, 0, 1);
+    animation-fill-mode: backwards;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .radial-center:hover {
+    transform: translate(-50%, -50%) scale(1.05);
+    box-shadow: 0 0 60px rgba(147, 197, 253, 0.55);
+  }
+  @keyframes center-in {
+    from { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+    to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  }
+
+  .radial-btn {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 9rem;
+    height: 9rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3rem;
+    border-radius: 9999px;
+    text-align: center;
+    animation-name: radial-in;
+    animation-duration: 0.7s;
+    animation-timing-function: cubic-bezier(0.65, 0.05, 0, 1);
+    animation-fill-mode: backwards;
+    animation-delay: var(--reveal-delay, 0s);
+  }
+  .radial-btn:hover {
+    transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) translateY(-4px);
+  }
+  @keyframes radial-in {
+    from { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+    to { transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(1); opacity: 1; }
+  }
+
+  @media (max-width: 767px) {
+    .radial-wrap {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      height: auto;
+      max-width: 28rem;
+    }
+    .radial-center {
+      grid-column: span 2;
+      position: static;
+      transform: none;
+      animation-name: fade-up;
+      animation-delay: 0.05s;
+    }
+    .radial-center:hover {
+      transform: scale(1.03);
+    }
+    .radial-btn {
+      position: static;
+      transform: none;
+      width: auto;
+      height: auto;
+      border-radius: 1rem;
+      padding: 1rem;
+      animation-name: fade-up;
+    }
+    .radial-btn:hover {
+      transform: translateY(-2px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .radial-center,
+    .radial-btn {
+      animation: none;
+      opacity: 1;
+    }
+    .radial-center,
+    .radial-btn,
+    .radial-center:hover,
+    .radial-btn:hover {
+      transform: translate(-50%, -50%);
+    }
+    .radial-center:hover {
+      transform: translate(-50%, -50%) scale(1);
+    }
+    @media (max-width: 767px) {
+      .radial-center,
+      .radial-btn,
+      .radial-center:hover,
+      .radial-btn:hover {
+        transform: none;
+      }
+    }
+  }
+</style>
