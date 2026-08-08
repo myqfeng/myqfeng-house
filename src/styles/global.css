@@ -5,6 +5,7 @@
 
 @layer base {
   :root {
+    color-scheme: dark;
     --color-bg: #0f172a;
     --color-bg-image: radial-gradient(ellipse at top, rgba(30, 41, 59, 0.22) 0%, rgba(15, 23, 42, 0.92) 50%, #020617 100%);
     --color-card: rgba(30, 41, 59, 0.7);
@@ -15,6 +16,7 @@
   }
 
   html.light {
+    color-scheme: light;
     --color-bg: #f8fafc;
     --color-bg-image: radial-gradient(ellipse at top, rgba(226, 232, 240, 0.75) 0%, rgba(241, 245, 249, 0.92) 55%, #e2e8f0 100%);
     --color-card: rgba(255, 255, 255, 0.9);

@@ -7,20 +7,26 @@ import { siteConfig } from '@/data/site';
 interface Props {
   title?: string;
   description?: string;
+  pagefindIgnore?: boolean;
 }
 
-const { title, description } = Astro.props;
+const { title, description, pagefindIgnore = false } = Astro.props;
 const pageTitle = title ? `${title} | ${siteConfig.title}` : siteConfig.title;
 const pageDescription = description || siteConfig.description;
 ---
 
 <!DOCTYPE html>
-<html lang="zh-CN" class="dark">
+<html lang="zh-CN" class="dark" data-pagefind-ignore={pagefindIgnore || undefined}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={pageDescription} />
     <title>{pageTitle}</title>
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={siteConfig.title} />
+    <meta property="og:url" content={`${siteConfig.siteUrl}${Astro.url.pathname}`} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <script is:inline>
       const theme = localStorage.getItem('theme') || 'dark';
