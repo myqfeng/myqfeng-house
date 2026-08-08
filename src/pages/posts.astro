@@ -204,6 +204,7 @@ const iconPaths: Record<string, string[]> = {
     position: absolute;
     left: 50%;
     top: 50%;
+    transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty)));
     width: 9rem;
     height: 9rem;
     display: flex;
@@ -216,8 +217,9 @@ const iconPaths: Record<string, string[]> = {
     animation-name: radial-in;
     animation-duration: 0.7s;
     animation-timing-function: cubic-bezier(0.65, 0.05, 0, 1);
-    animation-fill-mode: backwards;
+    animation-fill-mode: both;
     animation-delay: var(--reveal-delay, 0s);
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
   }
   .radial-btn:hover {
     transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) translateY(-4px);
@@ -266,21 +268,21 @@ const iconPaths: Record<string, string[]> = {
       opacity: 1;
     }
     .radial-center,
+    .radial-center:hover {
+      transform: translate(-50%, -50%);
+    }
+    .radial-btn,
+    .radial-btn:hover {
+      transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty)));
+    }
+  }
+
+  @media (max-width: 767px) and (prefers-reduced-motion: reduce) {
+    .radial-center,
     .radial-btn,
     .radial-center:hover,
     .radial-btn:hover {
-      transform: translate(-50%, -50%);
-    }
-    .radial-center:hover {
-      transform: translate(-50%, -50%) scale(1);
-    }
-    @media (max-width: 767px) {
-      .radial-center,
-      .radial-btn,
-      .radial-center:hover,
-      .radial-btn:hover {
-        transform: none;
-      }
+      transform: none;
     }
   }
 </style>
