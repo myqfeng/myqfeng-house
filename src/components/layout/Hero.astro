@@ -85,19 +85,21 @@ const announcement = siteConfig.announcement ?? '';
   </button>
 </section>
 
-<script is:inline>
-  const scrollHint = document.querySelector('.hero-scroll-hint');
-  scrollHint?.addEventListener('click', () => {
-    window.scrollTo({ top: window.innerHeight, behavior: 'smooth' });
-  });
+<script is:inline data-astro-rerun>
+  (() => {
+    const scrollHint = document.querySelector('.hero-scroll-hint');
+    scrollHint?.addEventListener('click', () => {
+      window.scrollTo({ top: window.innerHeight, behavior: 'smooth' });
+    });
 
-  const heroInput = document.getElementById('hero-search');
-  heroInput?.addEventListener('keydown', (event) => {
-    if (event.key === 'Enter') {
-      const query = heroInput.value.trim();
-      window.__openPagefindSearch?.(query);
-    }
-  });
+    const heroInput = document.getElementById('hero-search');
+    heroInput?.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        const query = heroInput.value.trim();
+        window.__openPagefindSearch?.(query);
+      }
+    });
+  })();
 </script>
 
 <style is:global>

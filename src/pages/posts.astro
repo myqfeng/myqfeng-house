@@ -81,11 +81,11 @@ const radialButtons = postTypes.map((type, index) => {
     const script = document.currentScript;
     const pageSize = Number(script?.dataset.pageSize || '12');
     const validTypes = JSON.parse(script?.dataset.validTypes || '[]');
-    const params = new URLSearchParams(window.location.search);
-    const hasType = params.has('type');
-    document.querySelector('[data-radial-nav]')?.classList.toggle('hidden', hasType);
-    document.querySelector('[data-posts-list]')?.classList.toggle('hidden', !hasType);
 
+    const currentParams = () => new URLSearchParams(window.location.search);
+
+    const radialNav = document.querySelector('[data-radial-nav]');
+    const postsList = document.querySelector('[data-posts-list]');
     const cards = Array.from(document.querySelectorAll('[data-searchable]'));
     const filters = Array.from(document.querySelectorAll('[data-type-filter]'));
     const input = document.getElementById('search');
@@ -93,6 +93,12 @@ const radialButtons = postTypes.map((type, index) => {
     const emptyState = document.querySelector('[data-empty-state]');
     const activeClass = ['bg-sky-bright', 'text-moon-900'];
     const inactiveClass = ['bg-moon-800', 'text-moon-200', 'hover:bg-moon-700'];
+
+    function applyMode() {
+      const hasType = currentParams().has('type');
+      radialNav?.classList.toggle('hidden', hasType);
+      postsList?.classList.toggle('hidden', !hasType);
+    }
 
     function pageHref(type, page) {
       const next = new URLSearchParams();
@@ -119,11 +125,16 @@ const radialButtons = postTypes.map((type, index) => {
         link.textContent = label;
         link.className = `rounded-lg px-4 py-2 ${isCurrent ? 'bg-sky-bright text-moon-900' : 'bg-moon-800 text-moon-200 hover:bg-moon-700 hover:text-sky-glow'}`;
         if (isCurrent) link.setAttribute('aria-current', 'page');
+        link.addEventListener('click', (event) => {
+          event.preventDefault();
+          navigateTo(link.href);
+        });
         pagination.append(link);
       });
     }
 
     function applyState() {
+      const params = currentParams();
       const rawType = params.get('type') || 'all';
       const type = validTypes.includes(rawType) ? rawType : 'all';
       const search = input?.value.toLowerCase().trim() || '';
@@ -141,19 +152,48 @@ const radialButtons = postTypes.map((type, index) => {
       cards.forEach((card) => card.classList.toggle('hidden', !visibleCards.has(card)));
       emptyState?.classList.toggle('hidden', matchingCards.length > 0);
 
-    filters.forEach((filter) => {
-      const isActive = filter.getAttribute('data-type-filter') === type;
-      activeClass.forEach((className) => filter.classList.toggle(className, isActive));
-      inactiveClass.forEach((className) => filter.classList.toggle(className, !isActive));
-    });
+      filters.forEach((filter) => {
+        const isActive = filter.getAttribute('data-type-filter') === type;
+        activeClass.forEach((className) => filter.classList.toggle(className, isActive));
+        inactiveClass.forEach((className) => filter.classList.toggle(className, !isActive));
+      });
 
       renderPagination(type, currentPage, totalPages);
     }
 
-    input?.addEventListener('input', () => {
-      params.delete('page');
+    function navigateTo(href) {
+      history.pushState({}, '', href);
+      applyMode();
+      applyState();
+    }
+
+    radialNav?.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', (event) => {
+        event.preventDefault();
+        navigateTo(link.getAttribute('href') || '/posts');
+      });
+    });
+
+    filters.forEach((filter) => {
+      filter.addEventListener('click', (event) => {
+        event.preventDefault();
+        navigateTo(pageHref(filter.getAttribute('data-type-filter') || 'all', 1));
+      });
+    });
+
+    window.addEventListener('popstate', () => {
+      applyMode();
       applyState();
     });
+
+    input?.addEventListener('input', () => {
+      const params = currentParams();
+      params.delete('page');
+      history.replaceState({}, '', `/posts?${params.toString()}`);
+      applyState();
+    });
+
+    applyMode();
     applyState();
   })();
 </script>

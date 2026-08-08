@@ -13,7 +13,7 @@ const { starCount = 140, meteorInterval = 2200, meteorBurst = 3, dimmed = false 
   <canvas data-starfield-canvas></canvas>
 </div>
 
-<script is:inline define:vars={{ starCount, meteorInterval, meteorBurst, dimmed }}>
+<script is:inline data-astro-rerun define:vars={{ starCount, meteorInterval, meteorBurst, dimmed }}>
   (() => {
     const container = document.querySelector('[data-starfield]');
     const canvas = container?.querySelector('[data-starfield-canvas]');
