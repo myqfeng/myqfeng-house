@@ -4,9 +4,10 @@
   "version": "0.1.0",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro build && pagefind --site dist",
     "preview": "astro preview",
-    "check": "astro check"
+    "check": "astro check",
+    "pagefind": "pagefind --site dist"
   },
   "dependencies": {
     "astro": "^5.0.0",
