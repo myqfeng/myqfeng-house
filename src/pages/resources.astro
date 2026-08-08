@@ -60,7 +60,7 @@ const tags = Object.keys(tagCounts).sort((a, b) => tagCounts[b] - tagCounts[a]);
     const inactiveClass = ['bg-moon-800', 'text-moon-200', 'hover:bg-moon-700'];
 
     function applyState() {
-      const selectedTag = tagFilters.find((button) => button.classList.contains('bg-sky-bright'))?.getAttribute('data-tag-filter') || 'all';
+      const selectedTag = tagFilters.find((button) => button.classList.contains('bg-sky-bright'))?.getAttribute('data-tag-filter')?.toLowerCase() || 'all';
       const search = input?.value.toLowerCase().trim() || '';
       let visible = 0;
 
