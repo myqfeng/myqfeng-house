@@ -7,8 +7,8 @@ export const siteConfig: SiteConfig = {
   title: '明月清风的小屋',
   subtitle: '收集星光，分享知识',
   description: '一个专注于学习资源收集与分享的个人站点，包含原创文章、转载文章与各类资源下载链接。',
-  siteUrl: 'https://example.com', // ⚠️ 部署前替换为你的真实域名
-  author: '站长',
+  siteUrl: 'https://example.com', //  部署前替换为你的真实域名
+  author: 'Myqfeng',
   pageSize: 12, // 文章/资源每页显示条数
 
   // SEO 关键词（用于 <meta name="keywords">）
@@ -34,8 +34,8 @@ export const siteConfig: SiteConfig = {
     //   image: { type: 'image', value: '/logo.png', alt: 'Logo' }
     //   icon : { type: 'icon', value: '<svg>...</svg>', alt: 'Logo' }  内联 SVG
     logo: {
-      type: 'icon',
-      value: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.7 15.2A8.5 8.5 0 0 1 8.8 3.3 8.5 8.5 0 1 0 20.7 15.2Z"/></svg>',
+      type: 'image',
+      value: 'https://www.myqfeng.top/logo.png',
       alt: '站点 Logo',
     },
   },
@@ -56,13 +56,12 @@ export const siteConfig: SiteConfig = {
   ],
 
   // ── 页脚 ──────────────────────────────────────
+  // 页脚自定义 HTML 请直接编辑 src/config/footer.html 文件
   footer: {
-    // 自定义 HTML，直接注入页脚（可放备案号等，留空不显示）
-    html: '',
     // 页脚链接组
     links: [{ label: '关于本站', url: '/about' }],
     // 版权文案（默认自动为 © 年份 站点名）
-    copyright: '明月清风，静谧求知。',
+    copyright: 'All rights reserved.',
   },
 
   // ── 统计代码（可选）───────────────────────────

@@ -45,7 +45,6 @@ export interface SiteConfig {
   };
   socialLinks?: Array<{ label: string; url: string }>;
   footer?: {
-    html?: string;
     links?: Array<{ label: string; url: string }>;
     copyright?: string;
   };

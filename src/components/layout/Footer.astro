@@ -1,11 +1,16 @@
 ---
 import { siteConfig } from '@/config/site';
+import footerHtmlRaw from '@/config/footer.html?raw';
 
 const footer = siteConfig.footer ?? {};
 const socialLinks = siteConfig.socialLinks ?? [];
 const copyright = footer.copyright
   ? `© ${new Date().getFullYear()} ${siteConfig.title}. ${footer.copyright}`
   : `© ${new Date().getFullYear()} ${siteConfig.title}`;
+
+// 从 src/config/footer.html 读取自定义页脚 HTML（文件仅含注释/空白时不显示）
+const withoutComments = footerHtmlRaw.replace(/<!--[\s\S]*?-->/g, '');
+const footerHtml = withoutComments.trim();
 ---
 
 <footer class="site-footer border-t py-8">
@@ -20,8 +25,8 @@ const copyright = footer.copyright
       </nav>
     )}
 
-    {footer.html && (
-      <div class="mb-4 text-center text-sm text-[var(--color-text-muted)]" set:html={footer.html} />
+    {footerHtml && (
+      <div class="mb-4 text-center text-sm text-[var(--color-text-muted)]" set:html={footerHtml} />
     )}
 
     {socialLinks.length > 0 && (
