@@ -225,10 +225,15 @@ socialLinks: [
 
 ```typescript
 footer: {
-  html: '<a href="https://beian.miit.gov.cn/">京ICP备XXXXXXXX号</a>', // 自定义 HTML 直接注入页脚（备案号等），留空不显示
   links: [{ label: '关于本站', url: '/about' }],  // 页脚链接组
   copyright: '明月清风，静谧求知。',              // 版权文案（自动拼上 © 年份 站点名）
 },
+```
+
+页脚的自定义 HTML（备案号等）直接编辑 **`src/config/footer.html`** 文件，内容会原样注入页脚，支持完整 HTML 标签；文件仅含注释或空白时不显示。示例：
+
+```html
+<a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">京ICP备XXXXXXXX号</a>
 ```
 
 ### 统计代码（可选）
