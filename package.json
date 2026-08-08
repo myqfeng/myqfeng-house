@@ -7,7 +7,9 @@
     "build": "astro build && pagefind --site dist",
     "preview": "astro preview",
     "check": "astro check",
-    "pagefind": "pagefind --site dist"
+    "pagefind": "pagefind --site dist",
+    "new-post": "node scripts/new-post.mjs",
+    "new-resource": "node scripts/new-resource.mjs"
   },
   "dependencies": {
     "astro": "^5.0.0",

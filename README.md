@@ -46,6 +46,10 @@ pnpm dev
 | `pnpm build` | 构建静态站点（含 Pagefind 搜索索引） |
 | `pnpm preview` | 本地预览构建产物 |
 | `pnpm check` | Astro 类型检查 |
+| `pnpm new-post` | 交互式创建一篇新文章（自动填充日期、作者等） |
+| `pnpm new-resource` | 交互式创建一个新资源（自动填充日期等） |
+
+> 交互命令会依次询问标题、分类、标签、文件名等信息，日期与作者自动按当前时间/站点配置填充。生成的文件默认为草稿（`draft: true`），完成后将 `draft` 改为 `false` 再构建即可发布。
 
 ---
 
