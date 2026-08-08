@@ -35,3 +35,7 @@
 
 - No dedicated test runner is configured in `package.json`; verification is based on the required production build, whitespace validation, and generated HTML inspection.
 - Current Astro content `post.id` values include the Markdown extension in generated paths and existing internal links, for example `/posts/hello-world.md`. This task preserves that behavior instead of changing slug semantics outside the brief.
+## Follow-up Fix
+
+- Updated `src/pages/posts/[slug].astro` and `src/components/layout/PostCard.astro` to strip `.md` / `.mdx` from local post URLs.
+- Re-ran `pnpm build` after the fix; build succeeded and generated clean post URLs such as `/posts/hello-world/`.

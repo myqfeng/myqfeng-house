@@ -10,7 +10,8 @@ interface Props {
 const { post } = Astro.props;
 const typeInfo = getResourceTypeById(post.data.type);
 const isExternal = post.data.source === 'repost-external' && Boolean(post.data.sourceUrl);
-const href = isExternal ? post.data.sourceUrl : `/posts/${post.id}`;
+const slug = post.id.replace(/\.(md|mdx)$/, '');
+const href = isExternal ? post.data.sourceUrl : `/posts/${slug}`;
 ---
 
 <article class="glass-card flex flex-col p-6 transition hover:-translate-y-1 hover:border-sky-bright/50">
