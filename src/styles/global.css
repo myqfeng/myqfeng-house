@@ -5,21 +5,23 @@
 
 @layer base {
   :root {
-    --color-bg: #f8fafc;
-    --color-card: rgba(241, 245, 249, 0.9);
-    --color-text: #0f172a;
-    --color-text-muted: #475569;
-    --color-accent: #2563eb;
-    --color-accent-hover: #3b82f6;
-  }
-
-  html.dark {
     --color-bg: #0f172a;
+    --color-bg-image: radial-gradient(ellipse at top, rgba(30, 41, 59, 0.22) 0%, rgba(15, 23, 42, 0.92) 50%, #020617 100%);
     --color-card: rgba(30, 41, 59, 0.7);
     --color-text: #f8fafc;
     --color-text-muted: #94a3b8;
     --color-accent: #60a5fa;
     --color-accent-hover: #93c5fd;
+  }
+
+  html.light {
+    --color-bg: #f8fafc;
+    --color-bg-image: radial-gradient(ellipse at top, rgba(226, 232, 240, 0.75) 0%, rgba(241, 245, 249, 0.92) 55%, #e2e8f0 100%);
+    --color-card: rgba(255, 255, 255, 0.9);
+    --color-text: #0f172a;
+    --color-text-muted: #475569;
+    --color-accent: #2563eb;
+    --color-accent-hover: #3b82f6;
   }
 
   html {
@@ -29,7 +31,7 @@
   body {
     color: var(--color-text);
     background-color: var(--color-bg);
-    background-image: radial-gradient(ellipse at top, rgba(30, 41, 59, 0.22) 0%, rgba(15, 23, 42, 0.92) 50%, #020617 100%);
+    background-image: var(--color-bg-image);
     min-height: 100vh;
   }
 }

@@ -43,5 +43,5 @@ Relevant output:
 
 ## Follow-up Fix
 
-- Addressed reviewer findings by making the homepage title read from `src/data/site.ts` instead of hardcoding the value, and by changing `src/styles/global.css` to use light/dark theme variables with a dark-mode override instead of locking the body to a single dark theme.
+- Addressed reviewer findings by making the homepage title read from `src/data/site.ts` instead of hardcoding the value, and by changing `src/styles/global.css` to keep dark mode as the default while exposing an `html.light` override for the light theme.
 - Re-ran `pnpm build` after the fix; build still succeeded with 1 page generated and no errors.
