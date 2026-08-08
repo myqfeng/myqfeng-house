@@ -57,4 +57,5 @@ pnpm build
 - Replaced the single-ID theme binding with a delegated `data-theme-toggle` handler that supports both desktop and mobile instances, including the three-state dark/light/system cycle.
 - Added light/system-aware surface styles, mobile menu ARIA state updates, link-triggered menu closing, and decorative icon accessibility attributes.
 - Replaced the unused `astro-icon` imports in the base navbar with inline SVG icons so the project builds without an Astro icon integration.
+- Wrapped the delegated theme script to avoid duplicate top-level declarations when both desktop and mobile controls are rendered, and aligned system-mode icon visibility with the system preference.
 - Re-ran `pnpm build`: successful, 1 static page generated with no errors.

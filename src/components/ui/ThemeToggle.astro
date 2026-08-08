@@ -4,11 +4,12 @@
 </button>
 
 <script is:inline>
-  const themeWindow = window;
-  if (!themeWindow.__mingyueThemeToggleBound) {
-    themeWindow.__mingyueThemeToggleBound = true;
+  (() => {
+    if (window.__mingyueThemeToggleBound) return;
+    window.__mingyueThemeToggleBound = true;
     document.addEventListener('click', (event) => {
-      const toggle = event.target.closest('[data-theme-toggle]');
+      const target = event.target;
+      const toggle = target instanceof Element ? target.closest('[data-theme-toggle]') : null;
       if (!toggle) return;
       const html = document.documentElement;
       const current = localStorage.getItem('theme') || 'dark';
@@ -17,10 +18,16 @@
       html.classList.add(next);
       localStorage.setItem('theme', next);
     });
-  }
+  })();
 </script>
 
 <style>
-  .dark .dark-hidden { display: none; }
-  html:not(.dark) .light-hidden { display: none; }
+  html.dark .dark-hidden,
+  html.system .dark-hidden,
+  html.light .light-hidden { display: none; }
+
+  @media (prefers-color-scheme: light) {
+    html.system .dark-hidden { display: inline; }
+    html.system .light-hidden { display: none; }
+  }
 </style>
