@@ -53,6 +53,7 @@
 
 - 为避免首页与分类入口在后续任务前落到 404，补充了最小占位路由：`/posts`、`/categories`、`/categories/[type]`、`/resources`、`/about`。
 - 这些占位页只提供基础布局和提示文案，不替代后续正式列表/详情实现。
+- 为避免首页文章卡片当前点击 404，补充了最小占位详情路由：`/posts/[slug]`，后续 Task 7 会替换为正式文章渲染页。
 
 ## 自审结果
 
@@ -85,6 +86,7 @@
 更新后重新构建：
 
 - 共生成 11 个页面
+- 共生成 13 个页面
 - `/posts`、`/categories`、`/categories/[type]`、`/resources`、`/about` 均已可访问
 
 ### `git diff --check`
