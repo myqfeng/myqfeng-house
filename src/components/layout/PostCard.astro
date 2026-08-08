@@ -1,0 +1,33 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { getResourceTypeById } from '@/data/site';
+import { formatDate } from '@/utils/format';
+
+interface Props {
+  post: CollectionEntry<'posts'>;
+}
+
+const { post } = Astro.props;
+const typeInfo = getResourceTypeById(post.data.type);
+const isExternal = post.data.source === 'repost-external' && Boolean(post.data.sourceUrl);
+const href = isExternal ? post.data.sourceUrl : `/posts/${post.id}`;
+---
+
+<article class="glass-card flex flex-col p-6 transition hover:-translate-y-1 hover:border-sky-bright/50">
+  <div class="mb-3 flex items-center gap-2">
+    <span class="text-xs font-medium text-sky-glow">{typeInfo?.name}</span>
+    {isExternal && <span class="ml-auto text-xs text-moon-400">外部链接</span>}
+  </div>
+  <h3 class="mb-2 text-xl font-semibold text-moon-50">
+    <a href={href} target={isExternal ? '_blank' : undefined} rel={isExternal ? 'noopener noreferrer' : undefined} class="hover:text-sky-glow focus:outline-none focus:ring-2 focus:ring-sky-glow">
+      {post.data.title}
+    </a>
+  </h3>
+  <p class="mb-4 line-clamp-2 flex-1 text-sm text-moon-300">{post.data.description}</p>
+  <div class="flex items-center justify-between gap-3 text-xs text-moon-400">
+    <span>{formatDate(post.data.published)}</span>
+    <span class="flex flex-wrap justify-end gap-1">
+      {post.data.tags.slice(0, 3).map((tag) => <span class="rounded-full bg-moon-700/50 px-2 py-1">{tag}</span>)}
+    </span>
+  </div>
+</article>

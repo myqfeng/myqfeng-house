@@ -1,0 +1,41 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { getResourceTypeById } from '@/data/site';
+import { formatDate } from '@/utils/format';
+
+interface Props {
+  resource: CollectionEntry<'resources'>;
+}
+
+const { resource } = Astro.props;
+const typeInfo = getResourceTypeById(resource.data.type);
+const downloadLabel = {
+  link: '前往下载',
+  pan: '网盘下载',
+  github: 'GitHub',
+}[resource.data.downloadType];
+---
+
+<article class="glass-card flex flex-col p-6 transition hover:-translate-y-1 hover:border-sky-bright/50">
+  <div class="mb-3 flex items-center gap-2">
+    <span class="text-xs font-medium text-sky-glow">{typeInfo?.name}</span>
+  </div>
+  <h3 class="mb-2 text-xl font-semibold text-moon-50">{resource.data.title}</h3>
+  <p class="mb-4 line-clamp-2 flex-1 text-sm text-moon-300">{resource.data.description}</p>
+  <div class="mb-4 flex flex-wrap gap-2">
+    {resource.data.tags.slice(0, 3).map((tag) => <span class="rounded-full bg-moon-700/50 px-2 py-1 text-xs text-moon-300">{tag}</span>)}
+  </div>
+  <div class="flex items-center justify-between gap-3">
+    <span class="text-xs text-moon-400">{formatDate(resource.data.published)}</span>
+    <a href={resource.data.url} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 rounded-lg bg-sky-bright/10 px-3 py-1.5 text-sm font-medium text-sky-glow transition hover:bg-sky-bright/20 focus:outline-none focus:ring-2 focus:ring-sky-glow">
+      {downloadLabel}
+      <svg class="h-3.5 w-3.5" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 5h5v5M19 5l-8 8" /><path d="M19 13v5a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h5" /></svg>
+    </a>
+  </div>
+  {resource.data.extractCode && (
+    <div class="mt-3 flex items-center gap-2 text-xs text-moon-300">
+      <span>提取码：</span>
+      <code class="rounded bg-moon-700/50 px-2 py-1">{resource.data.extractCode}</code>
+    </div>
+  )}
+</article>

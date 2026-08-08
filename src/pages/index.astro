@@ -1,13 +1,39 @@
 ---
 import BaseLayout from '@/components/layout/BaseLayout.astro';
-import { siteConfig } from '@/data/site';
+import Hero from '@/components/layout/Hero.astro';
+import CategoryGrid from '@/components/widgets/CategoryGrid.astro';
+import PostCard from '@/components/layout/PostCard.astro';
+import ResourceCard from '@/components/layout/ResourceCard.astro';
+import { getPosts, getResources, getResourceTypeCounts } from '@/utils/content';
+
+const counts = await getResourceTypeCounts();
+const posts = await getPosts();
+const resources = await getResources();
+const latestPosts = posts.slice(0, 3);
+const latestResources = resources.slice(0, 3);
 ---
 
 <BaseLayout>
-  <section class="flex min-h-[60vh] items-center justify-center px-4 font-sans">
-    <div class="text-center">
-      <h1 class="mb-4 text-4xl font-bold text-sky-bright">{siteConfig.title}</h1>
-      <p class="text-moon-300">Astro 5 + Tailwind CSS 3 项目骨架已就绪</p>
+  <Hero />
+  <CategoryGrid counts={counts} />
+
+  <section class="mx-auto max-w-7xl px-4 py-16">
+    <div class="mb-6 flex items-center justify-between gap-4">
+      <h2 class="text-2xl font-bold text-moon-50">最新文章</h2>
+      <a href="/posts" class="text-sm text-sky-glow hover:underline">查看全部</a>
+    </div>
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {latestPosts.map((post) => <PostCard post={post} />)}
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-7xl px-4 py-16">
+    <div class="mb-6 flex items-center justify-between gap-4">
+      <h2 class="text-2xl font-bold text-moon-50">最新资源</h2>
+      <a href="/resources" class="text-sm text-sky-glow hover:underline">查看全部</a>
+    </div>
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {latestResources.map((resource) => <ResourceCard resource={resource} />)}
     </div>
   </section>
 </BaseLayout>

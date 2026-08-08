@@ -1,0 +1,31 @@
+---
+import { resourceTypes } from '@/data/site';
+
+interface Props {
+  counts: Record<string, number>;
+}
+
+const { counts } = Astro.props;
+---
+
+<section class="mx-auto max-w-7xl px-4 py-16">
+  <h2 class="mb-8 text-center text-2xl font-bold text-moon-50">资源分类</h2>
+  <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    {resourceTypes.map((type) => (
+      <a href={`/categories/${type.id}`} class="glass-card group flex items-center gap-4 p-6 transition hover:-translate-y-1 hover:border-sky-bright/50 focus:outline-none focus:ring-2 focus:ring-sky-glow">
+        <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-sky-bright/10 text-sky-glow" aria-hidden="true">
+          {type.id === 'tutorial' && <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5v-16Z" /><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" /></svg>}
+          {type.id === 'tool' && <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m14.7 6.3 3-3 3 3-3 3M3 21l8.7-8.7M12 8l4 4M5 4l15 15" /></svg>}
+          {type.id === 'ebook' && <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5v-16ZM4 19.5h16" /></svg>}
+          {type.id === 'video' && <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9" /><path d="m10 8 6 4-6 4V8Z" /></svg>}
+          {type.id === 'note' && <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 3h14v18H5zM8 7h8M8 11h8M8 15h5" /></svg>}
+          {type.id === 'opensource' && <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m8 8-4 4 4 4M16 8l4 4-4 4M14 4l-4 16" /></svg>}
+        </div>
+        <div>
+          <h3 class="text-lg font-semibold text-moon-50 group-hover:text-sky-glow">{type.name}</h3>
+          <p class="text-sm text-moon-300">{counts[type.id] || 0} 个条目</p>
+        </div>
+      </a>
+    ))}
+  </div>
+</section>

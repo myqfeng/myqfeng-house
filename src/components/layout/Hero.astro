@@ -1,0 +1,24 @@
+---
+import { siteConfig } from '@/data/site';
+---
+
+<section class="relative flex min-h-[60vh] flex-col items-center justify-center px-4 text-center">
+  <div class="absolute inset-0 overflow-hidden" aria-hidden="true">
+    <div class="absolute -left-20 -top-20 h-72 w-72 rounded-full bg-sky-bright/20 blur-3xl"></div>
+    <div class="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-indigo-500/10 blur-3xl"></div>
+  </div>
+  <div class="relative z-10">
+    <h1 class="mb-4 text-4xl font-bold tracking-tight text-moon-50 md:text-6xl">
+      {siteConfig.title}
+    </h1>
+    <p class="mb-8 text-lg text-moon-300 md:text-xl">
+      {siteConfig.subtitle}
+    </p>
+    <a href="/posts" class="inline-flex items-center gap-2 rounded-full bg-sky-bright px-6 py-3 font-medium text-moon-900 transition hover:bg-sky-glow focus:outline-none focus:ring-2 focus:ring-sky-glow focus:ring-offset-2 focus:ring-offset-moon-900">
+      开始探索
+      <svg class="h-4 w-4" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M5 12h14M13 6l6 6-6 6" />
+      </svg>
+    </a>
+  </div>
+</section>
