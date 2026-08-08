@@ -14,9 +14,11 @@
 
 - [环境要求](#环境要求)
 - [本地开发](#本地开发)
+- [站点页面](#站点页面)
 - [添加文章](#添加文章)
 - [添加资源](#添加资源)
 - [修改站点信息配置](#修改站点信息配置)
+- [项目结构](#项目结构)
 - [构建与部署](#构建与部署)
 
 ---
@@ -50,6 +52,19 @@ pnpm dev
 | `pnpm new-resource` | 交互式创建一个新资源（自动填充日期等） |
 
 > 交互命令会依次询问标题、分类、标签、文件名等信息，日期与作者自动按当前时间/站点配置填充。生成的文件默认为草稿（`draft: true`），完成后将 `draft` 改为 `false` 再构建即可发布。
+
+## 站点页面
+
+| 路由 | 页面 | 说明 |
+|---|---|---|
+| `/` | 首页 | Hero 标语 + 文章分类入口 + 最新文章/资源 |
+| `/posts` | 文章 | 顶部分类卡片（点击筛选）+ 搜索 + 文章列表 + 分页 |
+| `/posts/文章名/` | 文章详情 | Markdown 正文渲染，原创/转载模式（含「阅读原文」按钮） |
+| `/resources` | 资源 | 标签筛选（自动聚合）+ 搜索 + 下载链接卡片 |
+| `/about` | 关于 | 站点介绍与免责声明 |
+| 任意错误地址 | 404 | 暗夜星空主题 404 页 |
+
+搜索框在导航栏右侧（🔍），基于 Pagefind 全文索引，支持中文。
 
 ---
 
@@ -128,9 +143,9 @@ tags: ["效率", "免费"]
 draft: false
 pinned: false
 ---
-
-选填的补充说明正文，会显示在资源卡片之外的页面底部。
 ```
+
+> 说明：资源只有 frontmatter 被使用（卡片展示、标签筛选、下载链接），Markdown 正文不会在站内渲染，可写可不写。
 
 ### 字段说明
 
@@ -210,6 +225,34 @@ navLinks: [
 
 - 主题色板（moon 蓝灰、sky 月光蓝）：`tailwind.config.mjs`
 - 全局主题变量（背景、卡片、文字、强调色）：`src/styles/global.css`
+
+---
+
+## 项目结构
+
+```
+├── scripts/                # pnpm new-post / new-resource 脚手架脚本
+├── src/
+│   ├── components/         # 组件
+│   │   ├── layout/         #   布局类（Navbar、Footer、Hero、卡片、BaseLayout）
+│   │   ├── ui/             #   基础组件（SearchBox、Pagination、PagefindSearch）
+│   │   └── widgets/        #   组合组件（CategoryGrid、PostList）
+│   ├── config/
+│   │   └── site.ts         # ⭐ 站点配置（标题、导航、文章分类）——日常改这里
+│   ├── content/
+│   │   ├── posts/          # ⭐ 文章 Markdown（每天发文章写这里）
+│   │   └── resources/      # ⭐ 资源 Markdown（每天发资源写这里）
+│   ├── content.config.ts   # 内容 schema 校验（文章分类 type 枚举也在这里）
+│   ├── pages/              # 路由页面（index / posts / resources / about / 404）
+│   ├── styles/             # 全局样式与主题变量
+│   ├── types/              # TypeScript 类型定义
+│   └── utils/              # 内容获取与格式化工具
+├── astro.config.mjs        # Astro 配置（静态输出、站点 URL、Pagefind）
+├── tailwind.config.mjs     # Tailwind 主题色板
+└── package.json
+```
+
+带 ⭐ 的是日常使用最多的文件。
 
 ---
 
