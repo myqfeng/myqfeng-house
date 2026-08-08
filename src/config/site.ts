@@ -47,6 +47,7 @@ export const siteConfig: SiteConfig = {
     buttons: [
       { label: '开始探索', url: '/posts', style: 'primary' },
       { label: '资源下载', url: '/resources', style: 'ghost' },
+      { label: '留言板', url: '/guestbook', style: 'ghost' },
     ],
   },
 
