@@ -3,7 +3,7 @@ import BaseLayout from '@/components/layout/BaseLayout.astro';
 import SearchBox from '@/components/ui/SearchBox.astro';
 import Pagination from '@/components/ui/Pagination.astro';
 import PostList from '@/components/widgets/PostList.astro';
-import { resourceTypes, siteConfig } from '@/config/site';
+import { postTypes, siteConfig } from '@/config/site';
 import { getPosts, getPostTypeCounts } from '@/utils/content';
 
 const posts = await getPosts();
@@ -29,7 +29,7 @@ const iconPaths: Record<string, string[]> = {
         <span class="text-lg font-semibold text-moon-50 group-hover:text-sky-glow">全部</span>
         <span class="text-sm text-moon-300">{posts.length} 篇</span>
       </a>
-      {resourceTypes.map((type) => (
+      {postTypes.map((type) => (
         <a href={`/posts?type=${type.id}`} data-type-filter={type.id} class="glass-card group flex flex-col items-center gap-2 p-4 text-center transition hover:-translate-y-1 hover:border-sky-bright/50">
           <svg class="h-7 w-7 text-sky-glow" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             {(iconPaths[type.icon] ?? iconPaths['lucide:book-open']).map((path) => <path d={path} />)}
@@ -51,7 +51,7 @@ const iconPaths: Record<string, string[]> = {
   </section>
 </BaseLayout>
 
-<script is:inline define:vars={{ pageSize: siteConfig.pageSize, validTypes: resourceTypes.map((type) => type.id) }}>
+<script is:inline define:vars={{ pageSize: siteConfig.pageSize, validTypes: postTypes.map((type) => type.id) }}>
   const params = new URLSearchParams(window.location.search);
   const cards = Array.from(document.querySelectorAll('[data-searchable]'));
   const filters = Array.from(document.querySelectorAll('[data-type-filter]'));

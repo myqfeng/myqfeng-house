@@ -1,7 +1,7 @@
 import { defineCollection, z } from 'astro:content';
-import { resourceTypes } from '@/config/site';
+import { postTypes } from '@/config/site';
 
-const resourceTypeIds = resourceTypes.map((t) => t.id) as [string, ...string[]];
+const postTypeIds = postTypes.map((t) => t.id) as [string, ...string[]];
 
 const posts = defineCollection({
   type: 'content',
@@ -13,7 +13,7 @@ const posts = defineCollection({
     author: z.string().default('站长'),
     source: z.enum(['original', 'repost-local', 'repost-external']).default('original'),
     sourceUrl: z.string().optional(),
-    type: z.enum(resourceTypeIds).default('tutorial'),
+    type: z.enum(postTypeIds).default('tutorial'),
     tags: z.array(z.string()).default([]),
     draft: z.boolean().default(false),
     pinned: z.boolean().default(false),

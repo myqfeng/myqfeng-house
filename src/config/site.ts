@@ -1,5 +1,5 @@
 // src/config/site.ts
-import type { SiteConfig, ResourceTypeInfo } from '@/types';
+import type { SiteConfig, PostTypeInfo } from '@/types';
 
 export const siteConfig: SiteConfig = {
   title: '明月清风的小屋',
@@ -16,7 +16,8 @@ export const siteConfig: SiteConfig = {
   ],
 };
 
-export const resourceTypes: ResourceTypeInfo[] = [
+// 文章分类体系（资源不分类，仅使用 tags 标签）
+export const postTypes: PostTypeInfo[] = [
   { id: 'tutorial', name: '教程文章', icon: 'lucide:book-open', description: '系统化的学习教程与文章' },
   { id: 'tool', name: '工具软件', icon: 'lucide:wrench', description: '提升效率的软件与工具' },
   { id: 'ebook', name: '电子书/PDF', icon: 'lucide:book', description: '电子书籍与 PDF 文档' },
@@ -25,6 +26,6 @@ export const resourceTypes: ResourceTypeInfo[] = [
   { id: 'opensource', name: '开源项目', icon: 'lucide:code', description: '值得学习的开源项目' },
 ];
 
-export function getResourceTypeById(id: string): ResourceTypeInfo | undefined {
-  return resourceTypes.find((t) => t.id === id);
+export function getPostTypeById(id: string): PostTypeInfo | undefined {
+  return postTypes.find((t) => t.id === id);
 }

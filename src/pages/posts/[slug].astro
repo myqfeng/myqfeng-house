@@ -1,7 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '@/components/layout/BaseLayout.astro';
-import { getResourceTypeById } from '@/config/site';
+import { getPostTypeById } from '@/config/site';
 import { formatDate } from '@/utils/format';
 
 export async function getStaticPaths() {
@@ -14,7 +14,7 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 const { Content } = await render(post);
-const typeInfo = getResourceTypeById(post.data.type);
+const typeInfo = getPostTypeById(post.data.type);
 ---
 
 <BaseLayout title={post.data.title} description={post.data.description}>

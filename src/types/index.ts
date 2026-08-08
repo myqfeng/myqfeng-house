@@ -1,5 +1,5 @@
 // src/types/index.ts
-export type ResourceType =
+export type PostType =
   | 'tutorial'
   | 'tool'
   | 'ebook'
@@ -7,8 +7,8 @@ export type ResourceType =
   | 'note'
   | 'opensource';
 
-export interface ResourceTypeInfo {
-  id: ResourceType;
+export interface PostTypeInfo {
+  id: PostType;
   name: string;
   icon: string;
   description: string;

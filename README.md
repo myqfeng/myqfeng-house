@@ -4,7 +4,7 @@
 
 - **原创/转载文章**：Markdown 编写，支持站内渲染或外链跳转
 - **资源下载**：以链接形式分享（直链 / 网盘 / GitHub），本站不存储文件
-- **分类体系**：文章按 6 类资源类型分类；资源只使用 tag 标签
+- **分类体系**：文章按 6 类分类；资源不分类，只使用 tag 标签
 - **全文搜索**：构建时生成 Pagefind 索引，支持中文搜索
 - **主题**：暗夜明月风格，固定暗色
 
@@ -169,7 +169,8 @@ export const siteConfig: SiteConfig = {
   ],                               // 导航栏菜单，可增删或修改顺序
 };
 
-export const resourceTypes: ResourceTypeInfo[] = [
+// 文章分类体系（资源不分类，仅使用 tags 标签）
+export const postTypes: PostTypeInfo[] = [
   { id: 'tutorial',  name: '教程文章',  icon: 'lucide:book-open',  description: '系统化的学习教程与文章' },
   { id: 'tool',      name: '工具软件',  icon: 'lucide:wrench',     description: '提升效率的软件与工具' },
   { id: 'ebook',     name: '电子书/PDF', icon: 'lucide:book',      description: '电子书籍与 PDF 文档' },
@@ -199,7 +200,7 @@ navLinks: [
 
 ### 修改分类体系
 
-`resourceTypes` 数组定义了文章的全部分类（`id` 与文章 frontmatter 中的 `type` 对应）。**增删分类后请同步修改 `src/content.config.ts` 中 posts 集合的 `type` 枚举**，并重新运行 `pnpm dev` / `pnpm build`。
+`postTypes` 数组定义了文章的全部分类（`id` 与文章 frontmatter 中的 `type` 对应）。**资源不参与分类，仅通过 `tags` 标签组织。** 增删文章分类后请同步修改 `src/content.config.ts` 中 posts 集合的 `type` 枚举，并重新运行 `pnpm dev` / `pnpm build`。
 
 ### 关于页内容
 

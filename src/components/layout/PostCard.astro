@@ -1,6 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
-import { getResourceTypeById } from '@/config/site';
+import { getPostTypeById } from '@/config/site';
 import { formatDate } from '@/utils/format';
 
 interface Props {
@@ -8,7 +8,7 @@ interface Props {
 }
 
 const { post } = Astro.props;
-const typeInfo = getResourceTypeById(post.data.type);
+const typeInfo = getPostTypeById(post.data.type);
 const isExternal = post.data.source === 'repost-external' && Boolean(post.data.sourceUrl);
 const slug = post.id.replace(/\.(md|mdx)$/, '');
 const href = isExternal ? post.data.sourceUrl : `/posts/${slug}`;
