@@ -40,3 +40,8 @@ Relevant output:
 
 - The task brief includes an `astro.config.mjs` snippet importing `@tailwindcss/vite`, but the project currently uses Tailwind 3 through `postcss.config.cjs` and does not declare `@tailwindcss/vite` in `package.json`. Adding that import would break the no-install constraint and is unnecessary for the passing build.
 - `astro.config.mjs` already had `site: 'https://example.com'` at base commit `30c3c9b`, so there was no effective Task 2 diff to make in that file.
+
+## Follow-up Fix
+
+- Addressed reviewer findings by making the homepage title read from `src/data/site.ts` instead of hardcoding the value, and by changing `src/styles/global.css` to use light/dark theme variables with a dark-mode override instead of locking the body to a single dark theme.
+- Re-ran `pnpm build` after the fix; build still succeeded with 1 page generated and no errors.
