@@ -2,16 +2,17 @@
 interface Props {
   starCount?: number;
   meteorInterval?: number;
+  meteorBurst?: number;
 }
 
-const { starCount = 140, meteorInterval = 4000 } = Astro.props;
+const { starCount = 140, meteorInterval = 2200, meteorBurst = 3 } = Astro.props;
 ---
 
 <div class="starfield" data-starfield aria-hidden="true">
   <canvas data-starfield-canvas></canvas>
 </div>
 
-<script is:inline define:vars={{ starCount, meteorInterval }}>
+<script is:inline define:vars={{ starCount, meteorInterval, meteorBurst }}>
   (() => {
     const container = document.querySelector('[data-starfield]');
     const canvas = container?.querySelector('[data-starfield-canvas]');
@@ -59,15 +60,22 @@ const { starCount = 140, meteorInterval = 4000 } = Astro.props;
       }));
     }
 
-    function spawnMeteor() {
-      meteors.push({
-        x: rand(width * 0.1, width * 0.95),
-        y: rand(-height * 0.2, height * 0.1),
-        vx: rand(-3.2, -2),
-        vy: rand(2, 3.2),
-        life: 1,
-        len: rand(80, 160),
-      });
+    function spawnMeteors() {
+      // 一次生成多颗流星，起点分散、速度与长度随机，形成"多点流星"效果
+      const count = 1 + Math.floor(Math.random() * meteorBurst);
+      const startX = rand(width * 0.15, width * 0.95);
+      const startY = rand(-height * 0.25, height * 0.12);
+      for (let i = 0; i < count; i += 1) {
+        const spread = rand(-60, 60);
+        meteors.push({
+          x: startX + spread * 0.35,
+          y: startY + Math.abs(spread) * 0.35,
+          vx: rand(-3.4, -2),
+          vy: rand(2, 3.4),
+          life: 1,
+          len: rand(90, 200),
+        });
+      }
     }
 
     function drawStars(t) {
@@ -128,7 +136,7 @@ const { starCount = 140, meteorInterval = 4000 } = Astro.props;
       if (!reducedMotion) {
         if (t - lastMeteorAt > meteorInterval) {
           lastMeteorAt = t;
-          spawnMeteor();
+          spawnMeteors();
         }
         drawMeteors(16.7);
       }
