@@ -34,8 +34,6 @@ const iconPaths: Record<string, string[]> = {
 
 <BaseLayout title="文章" description="浏览所有原创文章和转载文章">
   <section class="mx-auto max-w-7xl px-4 py-12">
-    <PageHeader title="文章" />
-
     <div class="radial-wrap" data-radial-nav>
       <a href="/posts?type=all" class="radial-center">
         <span class="text-lg font-bold text-moon-900">所有文章</span>
@@ -47,28 +45,26 @@ const iconPaths: Record<string, string[]> = {
           class="radial-btn glass-card"
           style={`--tx: ${button.tx}px; --ty: ${button.ty}px; --reveal-delay: ${button.delay}`}
         >
-          <svg class="h-8 w-8 text-sky-glow" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <svg class="h-7 w-7 text-sky-glow" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             {(iconPaths[button.icon] ?? iconPaths['lucide:book-open']).map((path) => <path d={path} />)}
           </svg>
           <span class="text-sm font-semibold text-moon-50">{button.name}</span>
+          <span class="radial-btn-desc text-xs text-moon-300">{button.description}</span>
           <span class="text-xs text-moon-300">{counts[button.id] || 0} 篇</span>
         </a>
       ))}
     </div>
 
     <div class="hidden" data-posts-list>
-      <div class="reveal mb-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6" style="--reveal-delay: 0ms">
-        <a href="/posts?type=all" data-type-filter="all" class="glass-card group flex flex-col items-center gap-2 p-4 text-center transition hover:-translate-y-1 hover:border-sky-bright/50">
-          <span class="text-lg font-semibold text-moon-50 group-hover:text-sky-glow">全部</span>
-          <span class="text-sm text-moon-300">{posts.length} 篇</span>
+      <PageHeader title="文章" />
+
+      <div class="reveal mb-6 flex flex-wrap gap-2" style="--reveal-delay: 0ms">
+        <a href="/posts?type=all" data-type-filter="all" class="rounded-full bg-sky-bright px-4 py-1.5 text-sm font-medium text-moon-900 transition">
+          全部 ({posts.length})
         </a>
         {postTypes.map((type) => (
-          <a href={`/posts?type=${type.id}`} data-type-filter={type.id} class="glass-card group flex flex-col items-center gap-2 p-4 text-center transition hover:-translate-y-1 hover:border-sky-bright/50">
-            <svg class="h-7 w-7 text-sky-glow" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              {(iconPaths[type.icon] ?? iconPaths['lucide:book-open']).map((path) => <path d={path} />)}
-            </svg>
-            <span class="text-sm font-semibold text-moon-50 group-hover:text-sky-glow">{type.name}</span>
-            <span class="text-xs text-moon-300">{counts[type.id] || 0} 篇</span>
+          <a href={`/posts?type=${type.id}`} data-type-filter={type.id} class="rounded-full bg-moon-800 px-4 py-1.5 text-sm font-medium text-moon-200 transition hover:bg-moon-700">
+            {type.name} ({counts[type.id] || 0})
           </a>
         ))}
       </div>
@@ -105,7 +101,8 @@ const iconPaths: Record<string, string[]> = {
     const input = document.getElementById('search');
     const pagination = document.querySelector('[data-pagination]');
     const emptyState = document.querySelector('[data-empty-state]');
-    const activeCardClass = ['border-sky-bright/70', 'ring-1', 'ring-sky-bright'];
+    const activeClass = ['bg-sky-bright', 'text-moon-900'];
+    const inactiveClass = ['bg-moon-800', 'text-moon-200', 'hover:bg-moon-700'];
 
     function pageHref(type, page) {
       const next = new URLSearchParams();
@@ -154,10 +151,11 @@ const iconPaths: Record<string, string[]> = {
       cards.forEach((card) => card.classList.toggle('hidden', !visibleCards.has(card)));
       emptyState?.classList.toggle('hidden', matchingCards.length > 0);
 
-      filters.forEach((filter) => {
-        const isActive = filter.getAttribute('data-type-filter') === type;
-        activeCardClass.forEach((className) => filter.classList.toggle(className, isActive));
-      });
+    filters.forEach((filter) => {
+      const isActive = filter.getAttribute('data-type-filter') === type;
+      activeClass.forEach((className) => filter.classList.toggle(className, isActive));
+      inactiveClass.forEach((className) => filter.classList.toggle(className, !isActive));
+    });
 
       renderPagination(type, currentPage, totalPages);
     }
@@ -212,8 +210,8 @@ const iconPaths: Record<string, string[]> = {
     left: 50%;
     top: 50%;
     transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty)));
-    width: 9rem;
-    height: 9rem;
+    width: 11rem;
+    height: 11rem;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -221,12 +219,17 @@ const iconPaths: Record<string, string[]> = {
     gap: 0.3rem;
     border-radius: 9999px;
     text-align: center;
+    padding: 1rem;
     animation-name: radial-in;
     animation-duration: 0.7s;
     animation-timing-function: cubic-bezier(0.65, 0.05, 0, 1);
     animation-fill-mode: both;
     animation-delay: var(--reveal-delay, 0s);
     transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  .radial-btn-desc {
+    line-height: 1.45;
+    word-break: break-word;
   }
   .radial-btn:hover {
     transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) translateY(-4px);
