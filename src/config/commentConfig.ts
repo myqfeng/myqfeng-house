@@ -10,7 +10,7 @@ export const commentConfig: CommentConfig = {
   // Artalk 评论系统（需自建后端服务，Docker 部署参考 https://artalk.js.org/guide/deploy.html）
   artalk: {
     // 后端程序 API 地址，替换为你实际部署的地址（注意以 / 结尾）
-    server: 'https://artalk.example.com/',
+    server: 'https://artalk.myqfeng.top/',
     // 界面语言，支持 en / zh-CN / zh-TW / ja / ko 等，'auto' 为自动检测
     locale: 'zh-CN',
     // 是否在评论区显示文章阅读量（需要后端启用统计功能）

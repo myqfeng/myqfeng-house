@@ -116,6 +116,23 @@ function frontmatter(fields) {
   return lines.join('\n');
 }
 
+const POST_SOURCES = [
+  { id: 'original', name: '原创' },
+  { id: 'repost-local', name: '站内转载' },
+  { id: 'repost-external', name: '站外转载' },
+];
+
+async function askSource() {
+  console.log('选择来源:');
+  POST_SOURCES.forEach((type, index) => console.log(`  ${index + 1}. ${type.name} (${type.id})`));
+  const answer = await ask('来源编号', '1');
+  const index = parseInt(answer, 10);
+  if (Number.isInteger(index) && index >= 1 && index <= POST_SOURCES.length) {
+    return POST_SOURCES[index - 1].id;
+  }
+  return POST_SOURCES[0].id;
+}
+
 async function main() {
   const author = await getDefaultAuthor();
   const types = await getTypes();
@@ -128,7 +145,7 @@ async function main() {
   const type = await askType(types);
   const rawTags = await ask('标签（用逗号分隔，可选）');
   const tags = parseTags(rawTags);
-  const source = await ask('来源（original / repost-local / repost-external，默认 original）', 'original');
+  const source = await askSource();
   let sourceUrl = '';
   if (source !== 'original') {
     sourceUrl = await ask('原文链接');
