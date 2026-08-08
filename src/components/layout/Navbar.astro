@@ -1,0 +1,48 @@
+---
+import { Icon } from 'astro-icon/components';
+import { siteConfig } from '@/data/site';
+import ThemeToggle from '@/components/ui/ThemeToggle.astro';
+---
+
+<header class="sticky top-0 z-50 border-b border-moon-700/50 bg-moon-900/80 backdrop-blur-md">
+  <nav class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4">
+    <a href="/" class="flex items-center gap-2 text-xl font-bold text-moon-50 hover:text-sky-glow">
+      <Icon name="lucide:moon" class="h-6 w-6" />
+      <span>{siteConfig.title}</span>
+    </a>
+
+    <div class="hidden items-center gap-8 md:flex">
+      {siteConfig.navLinks.map((link) => (
+        <a href={link.url} class="text-sm font-medium text-moon-200 transition hover:text-sky-glow">
+          {link.name}
+        </a>
+      ))}
+      <ThemeToggle />
+    </div>
+
+    <button class="text-moon-200 md:hidden" aria-label="菜单" id="mobile-menu-btn">
+      <Icon name="lucide:menu" class="h-6 w-6" />
+    </button>
+  </nav>
+
+  <div id="mobile-menu" class="hidden border-t border-moon-700/50 px-4 py-4 md:hidden">
+    {siteConfig.navLinks.map((link) => (
+      <a href={link.url} class="block py-2 text-moon-200 hover:text-sky-glow">
+        {link.name}
+      </a>
+    ))}
+    <div class="pt-2">
+      <ThemeToggle />
+    </div>
+  </div>
+</header>
+
+<script is:inline>
+  const btn = document.getElementById('mobile-menu-btn');
+  const menu = document.getElementById('mobile-menu');
+  if (btn && menu) {
+    btn.addEventListener('click', () => {
+      menu.classList.toggle('hidden');
+    });
+  }
+</script>
