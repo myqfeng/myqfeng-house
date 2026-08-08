@@ -81,13 +81,13 @@ export const siteConfig: SiteConfig = {
 
 // 文章分类体系（icon 使用 lucide 图标名，如 lucide:cpu / lucide:terminal / lucide:code）
 export const postTypes: PostTypeInfo[] = [
-  { id: '0', name: '计算机基础篇', icon: 'lucide:square-play', description: '掌握基础计算机知识' },
-  { id: '1', name: '语言入门篇', icon: 'lucide:code', description: '程序设计语言入门学习' },
-  { id: '2', name: '工具软件篇', icon: 'lucide:wrench', description: '工欲善其事，必先利其器' },
-  { id: '3', name: '嵌入式 MCU 篇', icon: 'lucide:cpu', description: '学习嵌入式单片机开发' }, 
-  { id: '4', name: '计算机视觉篇', icon: 'lucide:camera', description: '计算机视觉基础' },
-  { id: '5', name: 'Linux 开发篇', icon: 'lucide:terminal', description: '来玩玩 Linux 吧' },
-    ];
+  { id: 'computer-basics', name: '计算机基础篇', icon: 'lucide:square-play', description: '掌握基础计算机知识' },
+  { id: 'language-basics', name: '语言入门篇', icon: 'lucide:code', description: '程序设计语言入门学习' },
+  { id: 'tools', name: '工具软件篇', icon: 'lucide:wrench', description: '工欲善其事，必先利其器' },
+  { id: 'embedded-mcu', name: '嵌入式 MCU 篇', icon: 'lucide:cpu', description: '学习嵌入式单片机开发' },
+  { id: 'computer-vision', name: '计算机视觉篇', icon: 'lucide:camera', description: '计算机视觉基础' },
+  { id: 'linux', name: 'Linux 开发篇', icon: 'lucide:terminal', description: '来玩玩 Linux 吧' },
+];
 
 export function getPostTypeById(id: string): PostTypeInfo | undefined {
   return postTypes.find((t) => t.id === id);
