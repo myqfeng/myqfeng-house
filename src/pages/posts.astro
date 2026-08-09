@@ -5,42 +5,100 @@ import PageHeader from '@/components/layout/PageHeader.astro';
 import SearchBox from '@/components/ui/SearchBox.astro';
 import Pagination from '@/components/ui/Pagination.astro';
 import PostList from '@/components/widgets/PostList.astro';
-import { postTypes, siteConfig } from '@/config/site';
+import { postTypes, postConfig } from '@/config/postConfig';
+import { siteConfig } from '@/config/site';
 import { getPosts, getPostTypeCounts } from '@/utils/content';
 
 const posts = await getPosts();
 const counts = await getPostTypeCounts();
-const totalPages = Math.ceil(posts.length / siteConfig.pageSize);
+const totalPages = Math.ceil(posts.length / postConfig.pageSize);
 
-const RADIUS = 220;
-const radialButtons = postTypes.map((type, index) => {
-  const angle = -Math.PI / 2 + (index * 2 * Math.PI) / postTypes.length;
+// 蛇形布局：左右两列按钮，左列从上到下、右列从下到上（S 形折返），
+// 中间行的按钮最靠外、首尾行向中间收拢形成菱形轮廓；
+// 单数分类时短列按钮组垂直居中；每个按钮用细线连到中间"所有文章"按钮
+const BTN_SIZE = 152; // 按钮直径 9.5rem（px）
+const COL_GAP = 16; // 相邻按钮垂直间距（px）
+const EDGE_PAD = 16; // 容器上下内边距（px）
+const WRAP_W = 1150; // 容器参考宽度（与 CSS 中 .radial-wrap 一致）
+const LEFT_X = 11; // 中间行左列按钮中心 x（%）
+const RIGHT_X = 89; // 中间行右列按钮中心 x（%）
+const INNER_X = 26; // 首尾行按钮收拢后的 x（%）
+
+const typeCount = postTypes.length;
+const leftCount = Math.ceil(typeCount / 2);
+const rightCount = typeCount - leftCount;
+const WRAP_H = leftCount * BTN_SIZE + (leftCount - 1) * COL_GAP + EDGE_PAD * 2;
+const middleY = WRAP_H / 2;
+const halfH = (WRAP_H - EDGE_PAD * 2) / 2;
+
+// 单列内按钮垂直分布：整组垂直居中（左列铺满时组中心即容器中心，短列自动居中）
+const colYs = (count: number) => {
+  const groupH = count * BTN_SIZE + (count - 1) * COL_GAP;
+  const top = (WRAP_H - groupH) / 2;
+  return Array.from({ length: count }, (_, i) => top + BTN_SIZE / 2 + i * (BTN_SIZE + COL_GAP));
+};
+
+// 水平收拢：距中间越远越靠内，中间行最外（菱形）
+const rowX = (y: number, isLeft: boolean) => {
+  const t = Math.min(Math.abs(y - middleY) / halfH, 1);
+  return isLeft ? LEFT_X + (INNER_X - LEFT_X) * t : RIGHT_X + (100 - INNER_X - RIGHT_X) * t;
+};
+
+const leftYs = colYs(leftCount);
+const rightYs = colYs(rightCount).reverse(); // 右列底到顶（蛇形折返）
+
+const snakeButtons = postTypes.map((type, index) => {
+  const isLeft = index < leftCount;
+  const k = isLeft ? index : index - leftCount;
+  const y = isLeft ? leftYs[k] : rightYs[k];
   return {
     ...type,
-    tx: Math.round(Math.cos(angle) * RADIUS),
-    ty: Math.round(Math.sin(angle) * RADIUS),
-    delay: `${0.15 + index * 0.12}s`,
+    px: rowX(y, isLeft).toFixed(2),
+    py: ((y / WRAP_H) * 100).toFixed(2),
+    delay: `${0.15 + index * 0.1}s`,
   };
 });
+
+// 连接线：每个分类按钮各自用一条细线连到中间"所有文章"按钮
+const centerLines = snakeButtons
+  .map(
+    (b) =>
+      `M ${WRAP_W / 2} ${WRAP_H / 2} L ${((parseFloat(b.px) / 100) * WRAP_W).toFixed(1)} ${((parseFloat(b.py) / 100) * WRAP_H).toFixed(1)}`,
+  )
+  .join(' ');
 ---
 
 <BaseLayout title="文章" description="浏览所有原创文章和转载文章">
   <section class="mx-auto max-w-7xl px-4 py-12">
-    <div class="radial-wrap" data-radial-nav>
+    <div class="radial-wrap" data-radial-nav style={`--wrap-h: ${WRAP_H}px`}>
+      <svg
+        class="radial-lines"
+        viewBox={`0 0 ${WRAP_W} ${WRAP_H}`}
+        preserveAspectRatio="none"
+        aria-hidden="true"
+      >
+        <path
+          d={centerLines}
+          fill="none"
+          stroke="rgba(147, 197, 253, 0.22)"
+          stroke-width="1.5"
+          vector-effect="non-scaling-stroke"
+        />
+      </svg>
       <a href="/posts?type=all" class="radial-center">
         <span class="text-xl font-bold text-moon-900">所有文章</span>
         <span class="text-sm text-moon-700">共 {posts.length} 篇</span>
       </a>
-      {radialButtons.map((button) => (
+      {snakeButtons.map((button) => (
         <a
           href={`/posts?type=${button.id}`}
           class="radial-btn glass-card"
-          style={`--tx: ${button.tx}px; --ty: ${button.ty}px; --reveal-delay: ${button.delay}`}
+          style={`--px: ${button.px}%; --py: ${button.py}%; --reveal-delay: ${button.delay}`}
         >
-          <Icon name={button.icon} class="h-8 w-8 text-sky-glow" aria-hidden="true" />
-          <span class="text-base font-semibold text-moon-50">{button.name}</span>
-          <span class="radial-btn-desc text-sm text-moon-300">{button.description}</span>
-          <span class="text-sm text-moon-300">{counts[button.id] || 0} 篇</span>
+          <Icon name={button.icon} class="h-7 w-7 text-sky-glow" aria-hidden="true" />
+          <span class="text-sm font-semibold text-moon-50">{button.name}</span>
+          <span class="radial-btn-desc text-xs text-moon-300">{button.description}</span>
+          <span class="text-xs text-moon-300">{counts[button.id] || 0} 篇</span>
         </a>
       ))}
     </div>
@@ -74,7 +132,7 @@ const radialButtons = postTypes.map((type, index) => {
 <script
   is:inline
   data-astro-rerun
-  data-page-size={siteConfig.pageSize}
+  data-page-size={postConfig.pageSize}
   data-valid-types={JSON.stringify(postTypes.map((type) => type.id))}
 >
   (() => {
@@ -211,8 +269,16 @@ const radialButtons = postTypes.map((type, index) => {
   .radial-wrap {
     position: relative;
     margin: 0 auto;
-    height: 72vh;
-    max-width: 900px;
+    height: var(--wrap-h, 780px);
+    max-width: 1150px;
+  }
+
+  .radial-lines {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
   }
 
   .radial-center {
@@ -246,11 +312,11 @@ const radialButtons = postTypes.map((type, index) => {
 
   .radial-btn {
     position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty)));
-    width: 12rem;
-    height: 12rem;
+    left: var(--px);
+    top: var(--py);
+    transform: translate(-50%, -50%);
+    width: 9.5rem;
+    height: 9.5rem;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -258,7 +324,7 @@ const radialButtons = postTypes.map((type, index) => {
     gap: 0.3rem;
     border-radius: 9999px;
     text-align: center;
-    padding: 1rem;
+    padding: 0.75rem;
     animation-name: radial-in;
     animation-duration: 0.7s;
     animation-timing-function: cubic-bezier(0.65, 0.05, 0, 1);
@@ -267,15 +333,19 @@ const radialButtons = postTypes.map((type, index) => {
     transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
   }
   .radial-btn-desc {
-    line-height: 1.45;
+    line-height: 1.4;
     word-break: break-word;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
   .radial-btn:hover {
-    transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) translateY(-4px);
+    transform: translate(-50%, -50%) translateY(-4px);
   }
   @keyframes radial-in {
     from { transform: translate(-50%, -50%) scale(0); opacity: 0; }
-    to { transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(1); opacity: 1; }
+    to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
   }
 
   @media (max-width: 767px) {
@@ -285,6 +355,12 @@ const radialButtons = postTypes.map((type, index) => {
       gap: 1rem;
       height: auto;
       max-width: 28rem;
+    }
+    .radial-wrap.hidden {
+      display: none;
+    }
+    .radial-lines {
+      display: none;
     }
     .radial-center {
       grid-column: span 2;
@@ -322,7 +398,7 @@ const radialButtons = postTypes.map((type, index) => {
     }
     .radial-btn,
     .radial-btn:hover {
-      transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty)));
+      transform: translate(-50%, -50%);
     }
   }
 

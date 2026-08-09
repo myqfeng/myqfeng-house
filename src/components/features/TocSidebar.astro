@@ -1,0 +1,89 @@
+---
+import { Icon } from 'astro-icon/components';
+import { postConfig } from '@/config/postConfig';
+
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  headings: Heading[];
+}
+
+const { headings } = Astro.props;
+const { enabled, minDepth, maxDepth, collapseThreshold } = postConfig.toc;
+const items = headings.filter((h) => h.depth >= minDepth && h.depth <= maxDepth);
+const hasItems = enabled && items.length > 0;
+const collapsedByDefault = items.length <= collapseThreshold;
+---
+
+{hasItems && (
+  <>
+    <aside data-toc-panel data-toc-collapsed={collapsedByDefault ? '' : undefined} class="sticky top-24 hidden w-full lg:block">
+      <div class="border-r border-moon-700/50 pr-6">
+        <button
+          type="button"
+          data-toc-toggle
+          aria-label="收起目录"
+          class="mb-3 flex w-full cursor-pointer select-none items-center justify-between rounded-md py-1 text-sm font-semibold tracking-wide text-moon-400 transition-colors hover:text-moon-200 focus:outline-none focus:ring-2 focus:ring-sky-glow"
+        >
+          本页目录
+          <Icon
+            name="lucide:chevron-left"
+            class="h-4 w-4 text-moon-400"
+            aria-hidden="true"
+          />
+        </button>
+        <nav aria-label="文章目录" class="max-h-[calc(100vh-11rem)] overflow-y-auto">
+          <ul class="space-y-0.5">
+            {items.map((item) => {
+              const level = item.depth - minDepth;
+              return (
+                <li class:list={[level >= 1 && 'pl-4', level >= 2 && 'pl-8']}>
+                  <a
+                    href={`#${item.slug}`}
+                    class:list={[
+                      'block rounded-md px-2 py-1 text-sm leading-snug text-moon-300 transition-colors duration-200 hover:bg-moon-800/40 hover:text-sky-glow focus:outline-none focus:ring-2 focus:ring-sky-glow',
+                      level === 0 && 'font-medium text-moon-200',
+                      level >= 1 && 'text-[13px]',
+                    ]}
+                  >
+                    {item.text}
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+      </div>
+    </aside>
+
+    <button
+      type="button"
+      data-toc-open
+      class:list={[
+        'glass-card fixed left-4 top-1/2 z-40 -translate-y-1/2 p-3 text-moon-300 hover:text-sky-glow focus:outline-none focus:ring-2 focus:ring-sky-glow',
+        !collapsedByDefault && 'hidden',
+      ]}
+    >
+      <Icon name="lucide:list" class="h-5 w-5" aria-hidden="true" />
+    </button>
+
+    <script is:inline data-astro-rerun>
+      (() => {
+        const panel = document.querySelector('[data-toc-panel]');
+        if (!panel) return;
+        const openBtn = document.querySelector('[data-toc-open]');
+        const toggle = document.querySelector('[data-toc-toggle]');
+        const setCollapsed = (collapsed) => {
+          panel.toggleAttribute('data-toc-collapsed', collapsed);
+          openBtn?.classList.toggle('hidden', !collapsed);
+        };
+        toggle?.addEventListener('click', () => setCollapsed(true));
+        openBtn?.addEventListener('click', () => setCollapsed(false));
+      })();
+    </script>
+  </>
+)}

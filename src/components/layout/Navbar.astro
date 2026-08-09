@@ -65,22 +65,24 @@ const renderLogo = (() => {
   </div>
 </header>
 
-<script is:inline>
-  const btn = document.getElementById('mobile-menu-btn');
-  const menu = document.getElementById('mobile-menu');
-  if (btn && menu) {
-    const setMenuState = (open) => {
-      menu.classList.toggle('hidden', !open);
-      btn.setAttribute('aria-expanded', String(open));
-      menu.setAttribute('aria-hidden', String(!open));
-    };
-    btn.addEventListener('click', () => {
-      setMenuState(menu.classList.contains('hidden'));
-    });
-    menu.querySelectorAll('a').forEach((link) => {
-      link.addEventListener('click', () => setMenuState(false));
-    });
-  }
+<script is:inline data-astro-rerun>
+  (() => {
+    const btn = document.getElementById('mobile-menu-btn');
+    const menu = document.getElementById('mobile-menu');
+    if (btn && menu) {
+      const setMenuState = (open) => {
+        menu.classList.toggle('hidden', !open);
+        btn.setAttribute('aria-expanded', String(open));
+        menu.setAttribute('aria-hidden', String(!open));
+      };
+      btn.addEventListener('click', () => {
+        setMenuState(menu.classList.contains('hidden'));
+      });
+      menu.querySelectorAll('a').forEach((link) => {
+        link.addEventListener('click', () => setMenuState(false));
+      });
+    }
+  })();
 </script>
 
 <style is:global>

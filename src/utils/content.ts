@@ -1,5 +1,5 @@
 import { getCollection } from 'astro:content';
-import { postTypes } from '@/config/site';
+import { postTypes } from '@/config/postConfig';
 
 function sortContent<T extends { data: { pinned?: boolean; published: Date } }>(items: T[]) {
   return items.sort((a, b) => {

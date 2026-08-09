@@ -26,7 +26,6 @@ export interface SiteConfig {
   description: string;
   siteUrl: string;
   author: string;
-  pageSize: number;
   keywords?: string[];
   favicon?: string[];
   announcement?: string;
@@ -78,4 +77,18 @@ export interface CommentConfig {
   type: 'none' | 'artalk' | 'giscus';
   artalk?: ArtalkConfig;
   giscus?: GiscusConfig;
+}
+
+export interface FriendLink {
+  name: string;
+  url: string;
+  description?: string;
+  image?: string;
+}
+
+export interface TocConfig {
+  enabled: boolean;
+  minDepth: number;
+  maxDepth: number;
+  collapseThreshold: number;
 }

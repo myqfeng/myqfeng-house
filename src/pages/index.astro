@@ -4,6 +4,7 @@ import Hero from '@/components/layout/Hero.astro';
 import PostCard from '@/components/layout/PostCard.astro';
 import ResourceCard from '@/components/layout/ResourceCard.astro';
 import { getPosts, getResources } from '@/utils/content';
+import { friendLinks } from '@/config/friendLinks';
 
 const posts = await getPosts();
 const resources = await getResources();
@@ -14,7 +15,7 @@ const latestResources = resources.slice(0, 3);
 <BaseLayout starfield="full">
   <Hero />
 
-  <section class="mx-auto max-w-7xl px-4 py-16 md:py-24">
+  <section class="mx-auto max-w-7xl px-4 py-12 md:py-16">
     <div class="mb-10 flex items-end justify-between gap-4">
       <div>
         <p class="section-kicker mb-3 font-mono text-[11px] tracking-[0.3em] text-sky-glow">LATEST</p>
@@ -27,12 +28,12 @@ const latestResources = resources.slice(0, 3);
         </svg>
       </a>
     </div>
-    <div class="columns-1 gap-6 md:columns-2 lg:columns-3">
-      {latestPosts.map((post, index) => <div class="mb-6 break-inside-avoid"><PostCard post={post} /></div>)}
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {latestPosts.map((post) => <PostCard post={post} />)}
     </div>
   </section>
 
-  <section class="mx-auto max-w-7xl px-4 py-16 md:py-24">
+  <section class="mx-auto max-w-7xl px-4 py-12 md:py-16">
     <div class="mb-10 flex items-end justify-between gap-4">
       <div>
         <p class="section-kicker mb-3 font-mono text-[11px] tracking-[0.3em] text-sky-glow">DOWNLOADS</p>
@@ -45,10 +46,48 @@ const latestResources = resources.slice(0, 3);
         </svg>
       </a>
     </div>
-    <div class="columns-1 gap-6 md:columns-2 lg:columns-3">
-      {latestResources.map((resource, index) => <div class="mb-6 break-inside-avoid"><ResourceCard resource={resource} /></div>)}
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {latestResources.map((resource) => <ResourceCard resource={resource} />)}
     </div>
   </section>
+
+  {friendLinks.length > 0 && (
+    <section class="mx-auto max-w-7xl px-4 py-12 md:py-16">
+      <div class="mb-10 flex items-end justify-between gap-4">
+        <div>
+          <p class="section-kicker mb-3 font-mono text-[11px] tracking-[0.3em] text-sky-glow">LINKS</p>
+          <h2 class="text-3xl font-bold text-moon-50 md:text-4xl">友情链接</h2>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+        {friendLinks.map((link) => (
+          <a
+            href={link.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="glass-card group flex flex-col p-5 transition hover:-translate-y-1 hover:border-sky-bright/50"
+          >
+            <span class="flex items-center gap-2 text-lg font-semibold text-moon-50 transition group-hover:text-sky-glow">
+              {link.image && (
+                <img
+                  src={link.image}
+                  alt={`${link.name} 图标`}
+                  loading="lazy"
+                  onerror="this.style.display='none'"
+                  class="h-6 w-6 shrink-0 rounded object-contain"
+                />
+              )}
+              <span class="min-w-0 truncate">{link.name}</span>
+              <svg class="ml-auto h-4 w-4 shrink-0 text-moon-400 transition-transform group-hover:translate-x-0.5 group-hover:text-sky-glow" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M13 6l6 6-6 6" />
+              </svg>
+            </span>
+            {link.description && <span class="mt-1 line-clamp-2 text-sm text-moon-300">{link.description}</span>}
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
 </BaseLayout>
 
 <style is:global>

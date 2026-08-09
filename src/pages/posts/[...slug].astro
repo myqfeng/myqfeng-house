@@ -3,7 +3,8 @@ import { getCollection, render } from 'astro:content';
 import BaseLayout from '@/components/layout/BaseLayout.astro';
 import PageHeader from '@/components/layout/PageHeader.astro';
 import Comment from '@/components/comment/Comment.astro';
-import { getPostTypeById } from '@/config/site';
+import TocSidebar from '@/components/features/TocSidebar.astro';
+import { getPostTypeById } from '@/config/postConfig';
 import { formatDate } from '@/utils/format';
 
 export async function getStaticPaths() {
@@ -15,15 +16,19 @@ export async function getStaticPaths() {
 }
 
 const { post } = Astro.props;
-const { Content } = await render(post);
+const { Content, headings } = await render(post);
 const typeInfo = getPostTypeById(post.data.type);
 const typeName = typeInfo ? typeInfo.name : post.data.type;
 const metaText = typeName ? `${typeName} · ${formatDate(post.data.published)}` : formatDate(post.data.published);
 ---
 
 <BaseLayout title={post.data.title} description={post.data.description}>
-  <article class="mx-auto max-w-3xl px-4 py-12">
-    <PageHeader title={post.data.title} description={post.data.description} meta={metaText} tags={post.data.tags} />
+  <div class="mx-auto max-w-6xl px-4 py-12">
+    <div class="post-layout lg:grid lg:grid-cols-[280px_minmax(0,1fr)] lg:items-start lg:gap-10">
+      <TocSidebar headings={headings} />
+
+      <article class="mx-auto max-w-3xl min-w-0">
+        <PageHeader title={post.data.title} description={post.data.description} meta={metaText} tags={post.data.tags} />
 
     {post.data.source !== 'original' && (
       <div class="mb-8 rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 text-sm text-amber-200">
@@ -63,9 +68,11 @@ const metaText = typeName ? `${typeName} · ${formatDate(post.data.published)}` 
     <Comment post={post} />
 
     <footer class="mt-12 border-t border-moon-700/50 pt-6">
-      <a href="/posts" class="text-sm text-sky-glow hover:underline focus:outline-none focus:ring-2 focus:ring-sky-glow">
+      <a href="/posts?type=all" class="text-sm text-sky-glow hover:underline focus:outline-none focus:ring-2 focus:ring-sky-glow">
         ← 返回文章列表
       </a>
     </footer>
-  </article>
+      </article>
+    </div>
+  </div>
 </BaseLayout>

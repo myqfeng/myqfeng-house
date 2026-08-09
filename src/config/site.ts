@@ -1,15 +1,14 @@
 // src/config/site.ts
 // 站点配置中心：所有可自定义项都在这里调整
-import type { SiteConfig, PostTypeInfo } from '@/types';
+import type { SiteConfig } from '@/types';
 
 export const siteConfig: SiteConfig = {
   // ── 站点基本信息 ──────────────────────────────
   title: '明月清风的小屋',
   subtitle: '收集星光，分享知识',
-  description: '一个专注于学习资源收集与分享的个人站点，包含原创文章、转载文章与各类资源下载链接。',
+  description: '一个专注于学习资源收集与分享的个人站点',
   siteUrl: 'https://www.070219.xyz', //  部署前替换为你的真实域名
   author: 'Myqfeng',
-  pageSize: 24, // 文章/资源每页显示条数
 
   // SEO 关键词（用于 <meta name="keywords">）
   keywords: ['明月清风', '学习资源', '博客', '教程', '资源下载'],
@@ -78,17 +77,3 @@ export const siteConfig: SiteConfig = {
     body: '',
   },
 };
-
-// 文章分类体系（icon 使用 lucide 图标名，如 lucide:cpu / lucide:terminal / lucide:code）
-export const postTypes: PostTypeInfo[] = [
-  { id: 'computer-basics', name: '计算机基础篇', icon: 'lucide:square-play', description: '掌握基础计算机知识' },
-  { id: 'language-basics', name: '语言入门篇', icon: 'lucide:code', description: '程序设计语言入门学习' },
-  { id: 'tools', name: '工具软件篇', icon: 'lucide:wrench', description: '工欲善其事，必先利其器' },
-  { id: 'embedded-mcu', name: '嵌入式 MCU 篇', icon: 'lucide:cpu', description: '学习嵌入式单片机开发' },
-  { id: 'computer-vision', name: '计算机视觉篇', icon: 'lucide:camera', description: '计算机视觉基础' },
-  { id: 'linux', name: 'Linux 开发篇', icon: 'lucide:terminal', description: '来玩玩 Linux 吧' },
-];
-
-export function getPostTypeById(id: string): PostTypeInfo | undefined {
-  return postTypes.find((t) => t.id === id);
-}
