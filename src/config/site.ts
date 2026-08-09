@@ -9,7 +9,7 @@ export const siteConfig: SiteConfig = {
   description: '一个专注于学习资源收集与分享的个人站点，包含原创文章、转载文章与各类资源下载链接。',
   siteUrl: 'https://www.070219.xyz', //  部署前替换为你的真实域名
   author: 'Myqfeng',
-  pageSize: 12, // 文章/资源每页显示条数
+  pageSize: 24, // 文章/资源每页显示条数
 
   // SEO 关键词（用于 <meta name="keywords">）
   keywords: ['明月清风', '学习资源', '博客', '教程', '资源下载'],

@@ -4,7 +4,7 @@
 
 - **原创/转载文章**：Markdown 编写，支持站内渲染或外链跳转
 - **资源下载**：以链接形式分享（直链 / 网盘 / GitHub），本站不存储文件
-- **分类体系**：文章按 6 类分类；资源不分类，只使用 tag 标签
+- **分类体系**：文章分类以 Markdown 头部 `type` 元数据为准；资源不分类，只使用 tag 标签
 - **全文搜索**：构建时生成 Pagefind 索引，支持中文搜索
 - **主题**：暗夜明月风格，固定暗色
 
@@ -70,7 +70,7 @@ pnpm dev
 
 ## 添加文章
 
-文章存放在 `src/content/posts/` 目录，每个文件是一篇 Markdown 文章（文件名即文章的 URL 标识，建议用英文小写连字符，如 `my-first-post.md`，访问路径为 `/posts/my-first-post/`）。
+文章存放在 `src/content/posts/` 目录（递归扫描所有子目录），每个文件是一篇 Markdown 文章（文件名即文章的 URL 标识，建议用英文小写连字符，如 `my-first-post.md`，访问路径为 `/posts/my-first-post/`）。子目录仅用于开发者整理文件、便于辨认，**不影响文章归类**；实际归类由文章头部的 `type` 元数据决定。
 
 新建文件 `src/content/posts/my-first-post.md`：
 
@@ -111,7 +111,7 @@ console.log('代码块');
 | `author` | 可选 | 作者，默认「站长」 |
 | `source` | ✅ | 来源：`original`（原创）/ `repost-local`（转载并在本站生成页面）/ `repost-external`（转载仅外链跳转） |
 | `sourceUrl` | 转载必填 | 原文链接；`source` 为 `original` 时可留空 |
-| `type` | ✅ | 分类，可选：`tutorial`（教程文章）/ `tool`（工具软件）/ `ebook`（电子书/PDF）/ `video`（视频课程）/ `note`（笔记资料）/ `opensource`（开源项目） |
+| `type` | 可选 | 分类 id，取自 `src/config/site.ts` 的 `postTypes` 列表。若填写的值不在已有分类中，文章不会被归入任何分类按钮，仅显示在「所有文章」中，卡片上直接显示该元数据文本；不填则不显示分类 |
 | `tags` | 可选 | 标签数组，用于搜索与筛选 |
 | `draft` | 可选 | `true` 时不生成页面 |
 | `pinned` | 可选 | `true` 时置顶优先展示 |
@@ -275,7 +275,9 @@ navLinks: [
 
 ### 修改分类体系
 
-`postTypes` 数组定义了文章的全部分类（`id` 与文章 frontmatter 中的 `type` 对应）。**资源不参与分类，仅通过 `tags` 标签组织。** 增删文章分类后请同步修改 `src/content.config.ts` 中 posts 集合的 `type` 枚举，并重新运行 `pnpm dev` / `pnpm build`。
+`postTypes` 数组定义了文章分类按钮与筛选器中展示的全部分类（`id` 与文章 frontmatter 中的 `type` 对应）。**资源不参与分类，仅通过 `tags` 标签组织。**
+
+分类体系以文章头部 `type` 元数据为准：`type` 与 `postTypes` 中某个 `id` 匹配时，文章归入该分类并显示其中文名称；不匹配时文章只出现在「所有文章」中，不新增分类按钮，卡片与详情页直接显示元数据中的原始分类文本。增删 `postTypes` 后重新运行 `pnpm dev` / `pnpm build` 即可。
 
 ### 关于页内容
 
@@ -320,7 +322,7 @@ navLinks: [
 │   │   ├── posts/          # ⭐ 文章 Markdown（每天发文章写这里）
 │   │   ├── resources/      # ⭐ 资源 Markdown（每天发资源写这里）
 │   │   └── spec/           # 页面内容（about.md、guestbook.md）
-│   ├── content.config.ts   # 内容 schema 校验（文章分类 type 枚举也在这里）
+│   ├── content.config.ts   # 内容 schema 校验（文章 type 为自由字符串，不限制枚举）
 │   ├── pages/              # 路由页面（index / posts / resources / about / guestbook / 404）
 │   ├── styles/             # 全局样式与主题变量
 │   ├── types/              # TypeScript 类型定义

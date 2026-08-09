@@ -9,6 +9,7 @@ interface Props {
 
 const { post } = Astro.props;
 const typeInfo = getPostTypeById(post.data.type);
+const typeName = typeInfo ? typeInfo.name : post.data.type;
 const isExternal = post.data.source === 'repost-external' && Boolean(post.data.sourceUrl);
 const slug = post.id.replace(/\.(md|mdx)$/, '');
 const href = isExternal ? post.data.sourceUrl : `/posts/${slug}`;
@@ -16,7 +17,8 @@ const href = isExternal ? post.data.sourceUrl : `/posts/${slug}`;
 
 <article class="glass-card flex flex-col p-6 transition hover:-translate-y-1 hover:border-sky-bright/50">
   <div class="mb-3 flex items-center gap-2">
-    <span class="text-xs font-medium text-sky-glow">{typeInfo?.name}</span>
+    <span class="text-xs font-medium text-sky-glow">{typeName}</span>
+    <span class="text-xs text-moon-400">{post.data.author}</span>
     {isExternal && <span class="ml-auto text-xs text-moon-400">外部链接</span>}
   </div>
   <h3 class="mb-2 text-xl font-semibold text-moon-50">

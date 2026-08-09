@@ -31,9 +31,9 @@ const tags = Object.keys(tagCounts).sort((a, b) => tagCounts[b] - tagCounts[a]);
       <SearchBox id="resource-search" placeholder="搜索资源标题、描述或标签..." label="搜索资源" />
     </div>
 
-    <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3" id="resource-grid">
+    <div class="columns-1 gap-6 md:columns-2 lg:columns-3" id="resource-grid">
       {resources.map((resource, index) => (
-        <div class="reveal" style={`--reveal-delay: ${index * 60}ms`} data-tags={resource.data.tags.join(' ')} data-searchable={`${resource.data.title} ${resource.data.description} ${resource.data.tags.join(' ')}`}>
+        <div class="reveal mb-6 break-inside-avoid" style={`--reveal-delay: ${index * 60}ms`} data-tags={resource.data.tags.join(' ')} data-searchable={`${resource.data.title} ${resource.data.description} ${resource.data.tags.join(' ')}`}>
           <ResourceCard resource={resource} />
         </div>
       ))}

@@ -9,9 +9,9 @@ interface Props {
 const { posts } = Astro.props;
 ---
 
-<div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+<div class="columns-1 gap-6 md:columns-2 lg:columns-3">
   {posts.map((post, index) => (
-    <div class="reveal" style={`--reveal-delay: ${index * 60}ms`} data-type={post.data.type} data-searchable={`${post.data.title} ${post.data.description} ${post.data.tags.join(' ')}`}>
+    <div class="reveal mb-6 break-inside-avoid" style={`--reveal-delay: ${index * 60}ms`} data-type={post.data.type} data-searchable={`${post.data.title} ${post.data.description} ${post.data.tags.join(' ')}`}>
       <PostCard post={post} />
     </div>
   ))}
