@@ -1,0 +1,34 @@
+---
+import { Icon } from 'astro-icon/components';
+import type { SubTypeInfo } from '@/utils/content';
+
+interface Props {
+  sub: SubTypeInfo;
+  mainName: string;
+}
+
+const { sub, mainName } = Astro.props;
+const href = `/posts?type=${sub.type}`;
+---
+
+<a
+  href={href}
+  class="glass-card group flex h-full flex-col p-6 transition hover:-translate-y-1 hover:border-sky-bright/50 focus:outline-none focus:ring-2 focus:ring-sky-glow"
+>
+  <div class="mb-3 flex items-center gap-2">
+    <span class="text-xs font-medium text-sky-glow">{mainName}</span>
+    <span class="ml-auto text-xs text-moon-400">文章合集</span>
+  </div>
+  <h3 class="mb-2 flex items-center gap-2 text-xl font-semibold text-moon-50 group-hover:text-sky-glow">
+    <Icon name="lucide:folder-open" class="h-5 w-5 shrink-0 text-sky-glow" aria-hidden="true" />
+    <span class="truncate">{sub.name}</span>
+  </h3>
+  <p class="mb-4 line-clamp-2 flex-1 text-sm text-moon-300">共 {sub.count} 篇文章，点击查看全部内容</p>
+  <div class="flex items-center justify-between gap-3 text-xs text-moon-400">
+    <span>{sub.count} 篇</span>
+    <span class="inline-flex items-center gap-1 transition group-hover:translate-x-0.5 group-hover:text-sky-glow">
+      进入合集
+      <Icon name="lucide:chevron-right" class="h-3.5 w-3.5" aria-hidden="true" />
+    </span>
+  </div>
+</a>

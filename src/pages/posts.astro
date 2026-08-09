@@ -7,11 +7,12 @@ import Pagination from '@/components/ui/Pagination.astro';
 import PostList from '@/components/widgets/PostList.astro';
 import { postTypes, postConfig } from '@/config/postConfig';
 import { siteConfig } from '@/config/site';
-import { getPosts, getPostTypeCounts } from '@/utils/content';
+import { getPosts, getPostTypeCounts, getSubTypes, getTypeName } from '@/utils/content';
 
 const posts = await getPosts();
 const counts = await getPostTypeCounts();
 const totalPages = Math.ceil(posts.length / postConfig.pageSize);
+const subTypesByParent = getSubTypes(posts);
 
 // 蛇形布局：左右两列按钮，左列从上到下、右列从下到上（S 形折返），
 // 中间行的按钮最靠外、首尾行向中间收拢形成菱形轮廓；
@@ -106,6 +107,14 @@ const centerLines = snakeButtons
     <div class="hidden" data-posts-list>
       <PageHeader title="文章" />
 
+      <nav class="reveal mb-6 hidden items-center gap-2 text-sm text-moon-400" data-crumb style="--reveal-delay: 0ms">
+        <a href="/posts?type=all" class="hover:text-sky-glow" data-crumb-all>全部</a>
+        <span aria-hidden="true">/</span>
+        <a href="/posts?type=all" class="hover:text-sky-glow" data-crumb-parent></a>
+        <span aria-hidden="true" data-crumb-sep>/</span>
+        <span class="text-moon-200" data-crumb-current></span>
+      </nav>
+
       <div class="reveal mb-6 flex flex-wrap gap-2" style="--reveal-delay: 0ms">
         <a href="/posts?type=all" data-type-filter="all" class="rounded-full bg-sky-bright px-4 py-1.5 text-base font-medium text-moon-900 transition">
           全部 ({posts.length})
@@ -133,12 +142,17 @@ const centerLines = snakeButtons
   is:inline
   data-astro-rerun
   data-page-size={postConfig.pageSize}
-  data-valid-types={JSON.stringify(postTypes.map((type) => type.id))}
+  data-valid-types={JSON.stringify([
+    ...postTypes.map((type) => type.id),
+    ...Object.values(subTypesByParent).flat().map((sub) => sub.type),
+  ])}
+  data-main-names={JSON.stringify(Object.fromEntries(postTypes.map((type) => [type.id, type.name])))}
 >
   (() => {
     const script = document.currentScript;
     const pageSize = Number(script?.dataset.pageSize || '12');
     const validTypes = JSON.parse(script?.dataset.validTypes || '[]');
+    const mainNames = JSON.parse(script?.dataset.mainNames || '{}');
 
     const currentParams = () => new URLSearchParams(window.location.search);
 
@@ -149,6 +163,10 @@ const centerLines = snakeButtons
     const input = document.getElementById('search');
     const pagination = document.querySelector('[data-pagination]');
     const emptyState = document.querySelector('[data-empty-state]');
+    const crumb = document.querySelector('[data-crumb]');
+    const crumbParent = document.querySelector('[data-crumb-parent]');
+    const crumbSep = document.querySelector('[data-crumb-sep]');
+    const crumbCurrent = document.querySelector('[data-crumb-current]');
     const activeClass = ['bg-sky-bright', 'text-moon-900'];
     const inactiveClass = ['bg-moon-800', 'text-moon-200', 'hover:bg-moon-700'];
 
@@ -191,16 +209,39 @@ const centerLines = snakeButtons
       });
     }
 
+    function updateCrumb(type, parentId) {
+      if (!crumb) return;
+      const isSubView = type.includes('/');
+      crumb.classList.toggle('hidden', !isSubView);
+      if (!isSubView) return;
+      const parentName = mainNames[parentId] || parentId;
+      crumbParent.textContent = parentName;
+      crumbParent.href = `/posts?type=${parentId}`;
+      crumbSep.classList.remove('hidden');
+      crumbCurrent.textContent = decodeURIComponent(type.split('/')[1]);
+    }
+
     function applyState() {
       const params = currentParams();
       const rawType = params.get('type') || 'all';
       const type = validTypes.includes(rawType) ? rawType : 'all';
+      const isSubView = type.includes('/');
+      const parentId = isSubView ? type.split('/')[0] : type;
+      const hasAnySubs = cards.some((card) => card.hasAttribute('data-sub-card'));
       const search = input?.value.toLowerCase().trim() || '';
+
       const matchingCards = cards.filter((card) => {
-        const matchesType = type === 'all' || card.getAttribute('data-type') === type;
+        const cardType = card.getAttribute('data-type') || '';
+        const isSubCard = card.hasAttribute('data-sub-card');
+        let matchesType;
+        if (type === 'all') matchesType = isSubCard ? hasAnySubs : !cardType.includes('/'); // 全部视图只列直属文章与子分类卡片
+        else if (isSubView) matchesType = !isSubCard && cardType === type; // 子分类视图只列该子分类文章
+        else if (isSubCard) matchesType = cardType.startsWith(`${type}/`); // 主分类视图显示其子分类卡片
+        else matchesType = cardType === type; // 主分类视图只列直属文章
         const text = card.getAttribute('data-searchable')?.toLowerCase() || '';
         return matchesType && text.includes(search);
       });
+
       const totalPages = Math.ceil(matchingCards.length / pageSize);
       const requestedPage = Number.parseInt(params.get('page') || '1', 10);
       const currentPage = Math.min(Math.max(Number.isNaN(requestedPage) ? 1 : requestedPage, 1), Math.max(totalPages, 1));
@@ -211,11 +252,12 @@ const centerLines = snakeButtons
       emptyState?.classList.toggle('hidden', matchingCards.length > 0);
 
       filters.forEach((filter) => {
-        const isActive = filter.getAttribute('data-type-filter') === type;
+        const isActive = filter.getAttribute('data-type-filter') === parentId;
         activeClass.forEach((className) => filter.classList.toggle(className, isActive));
         inactiveClass.forEach((className) => filter.classList.toggle(className, !isActive));
       });
 
+      updateCrumb(type, parentId);
       renderPagination(type, currentPage, totalPages);
     }
 

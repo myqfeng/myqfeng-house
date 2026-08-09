@@ -54,7 +54,7 @@ export const friendLinks: FriendLink[] = [
   {
     name: '腾讯云 EdgeOne',
     url: 'https://intl.cloud.tencent.com/zh/products/teo',
-    description: '本站部署在腾讯云 EdgeOne 上',
+    description: '本站在腾讯云 EdgeOne 部署',
     image: 'https://cloud.tencent.com/favicon.ico',
   },
 ];

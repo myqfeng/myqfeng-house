@@ -4,7 +4,7 @@ import type { PostTypeInfo, TocConfig } from '@/types';
 
 export const postConfig = {
   // ── 分页 ──────────────────────────────────────
-  pageSize: 24, // 文章每页显示条数
+  pageSize: 12, // 文章每页显示条数
 
   // ── 文章目录（TOC）─────────────────────────────
   toc: {

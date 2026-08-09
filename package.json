@@ -16,6 +16,8 @@
     "@iconify-json/lucide": "^1.2.121",
     "@iconify-json/simple-icons": "^1.2.93",
     "astro": "^5.0.0",
+    "hastscript": "^9.0.1",
+    "rehype-components": "^0.3.0",
     "remark-directive": "^4.0.0",
     "typescript": "^5.7.0",
     "unist-util-visit": "^5.1.0"

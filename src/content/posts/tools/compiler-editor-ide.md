@@ -7,7 +7,7 @@ source: "original"
 type: "tools"
 tags: ["Compiler","IDE","开发工具"]
 draft: false
-pinned: false
+pinned: true
 ---
 
 > 工欲善其事，必先利其器。但“器”并不是越重越好，而是越“称手”越好。
@@ -50,8 +50,8 @@ IDE（Integrated Development Environment）把编辑器、编译器、调试器�
 
 **主流 C 语言 IDE：**
 - **Visual Studio**（注意不是 VS Code）：微软的旗舰 IDE，功能极其强大，Windows 下体验最佳，调试器无敌。缺点是安装包较大（几个 GB）且和 Windows 生态深度绑定。
-- **Code::Blocks**：轻量级、跨平台，专门为 C/C++ 设计，内置 MinGW 编译器，安装后直接可用。
-- **Dev-C++**：老牌经典，体积小，适合学校教学场景，但界面陈旧，更新缓慢（不推荐新用户）。
+- **Code::Blocks**：轻量级、跨平台，专门为 C/C++ 设计，Windows 下可选内置 MinGW 编译器，安装后直接可用。
+- **Dev-C++**：新手入门推荐，老牌经典，体积小，适合学校教学场景，是蓝桥杯C/C++软件赛的指定工具，但界面陈旧，更新缓慢（已停止维护）。
 - **CLion**：JetBrains 出品，智能提示极强，跨平台开发首选。
 
 ---

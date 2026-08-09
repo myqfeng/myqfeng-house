@@ -1,18 +1,46 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import PostCard from '@/components/layout/PostCard.astro';
+import SubTypeCard from '@/components/layout/SubTypeCard.astro';
+import { getSubTypes, getMainType } from '@/utils/content';
+import { getPostTypeById } from '@/config/postConfig';
 
 interface Props {
   posts: CollectionEntry<'posts'>[];
 }
 
 const { posts } = Astro.props;
+const subTypesByParent = getSubTypes(posts);
+const inserted = new Set<string>();
 ---
 
 <div class="columns-1 gap-6 md:columns-2 lg:columns-3">
-  {posts.map((post, index) => (
-    <div class="reveal mb-6 break-inside-avoid" style={`--reveal-delay: ${index * 60}ms`} data-type={post.data.type} data-searchable={`${post.data.title} ${post.data.description} ${post.data.tags.join(' ')}`}>
-      <PostCard post={post} />
-    </div>
-  ))}
+  {posts.map((post, index) => {
+    const main = getMainType(post.data.type);
+    const subs = subTypesByParent[main];
+    const shouldInsert = subs && !inserted.has(main);
+    if (shouldInsert) inserted.add(main);
+    return (
+      <Fragment>
+        {shouldInsert &&
+          subs.map((sub, i) => {
+            const typeInfo = getPostTypeById(main);
+            return (
+              <div
+                class="reveal mb-6 break-inside-avoid"
+                style={`--reveal-delay: ${index * 60 + i * 30}ms`}
+                data-type={sub.type}
+                data-sub-card
+                data-searchable={`${sub.name} ${typeInfo?.name ?? ''}`}
+              >
+                <SubTypeCard sub={sub} mainName={typeInfo?.name ?? main} />
+              </div>
+            );
+          })}
+        <div class="reveal mb-6 break-inside-avoid" style={`--reveal-delay: ${index * 60}ms`} data-type={post.data.type} data-searchable={`${post.data.title} ${post.data.description} ${post.data.tags.join(' ')}`}>
+          <PostCard post={post} />
+        </div>
+      </Fragment>
+    );
+  })}
 </div>

@@ -1,6 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
-import { getPostTypeById } from '@/config/postConfig';
+import { getTypeName } from '@/utils/content';
 import { formatDate } from '@/utils/format';
 
 interface Props {
@@ -8,24 +8,24 @@ interface Props {
 }
 
 const { post } = Astro.props;
-const typeInfo = getPostTypeById(post.data.type);
-const typeName = typeInfo ? typeInfo.name : post.data.type;
+const typeName = getTypeName(post.data.type);
 const isExternal = post.data.source === 'repost-external' && Boolean(post.data.sourceUrl);
 const slug = post.id.replace(/\.(md|mdx)$/, '');
 const href = isExternal ? post.data.sourceUrl : `/posts/${slug}`;
 ---
 
-<article class="glass-card flex flex-col p-6 transition hover:-translate-y-1 hover:border-sky-bright/50">
+<a
+  href={href}
+  target={isExternal ? '_blank' : undefined}
+  rel={isExternal ? 'noopener noreferrer' : undefined}
+  class="glass-card flex flex-col p-6 transition hover:-translate-y-1 hover:border-sky-bright/50 focus:outline-none focus:ring-2 focus:ring-sky-glow"
+>
   <div class="mb-3 flex items-center gap-2">
     <span class="text-xs font-medium text-sky-glow">{typeName}</span>
     <span class="text-xs text-moon-400">{post.data.author}</span>
     {isExternal && <span class="ml-auto text-xs text-moon-400">外部链接</span>}
   </div>
-  <h3 class="mb-2 text-xl font-semibold text-moon-50">
-    <a href={href} target={isExternal ? '_blank' : undefined} rel={isExternal ? 'noopener noreferrer' : undefined} class="hover:text-sky-glow focus:outline-none focus:ring-2 focus:ring-sky-glow">
-      {post.data.title}
-    </a>
-  </h3>
+  <h3 class="mb-2 text-xl font-semibold text-moon-50 group-hover:text-sky-glow">{post.data.title}</h3>
   <p class="mb-4 line-clamp-2 flex-1 text-sm text-moon-300">{post.data.description}</p>
   <div class="flex items-center justify-between gap-3 text-xs text-moon-400">
     <span>{formatDate(post.data.published)}</span>
@@ -33,4 +33,4 @@ const href = isExternal ? post.data.sourceUrl : `/posts/${slug}`;
       {post.data.tags.slice(0, 3).map((tag) => <span class="rounded-full bg-moon-700/50 px-2 py-1">{tag}</span>)}
     </span>
   </div>
-</article>
+</a>

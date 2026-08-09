@@ -1,15 +1,31 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import icon from 'astro-icon';
+import rehypeComponents from 'rehype-components';
 import remarkDirective from 'remark-directive';
 import { siteConfig } from './src/config/site.ts';
-import { remarkDirectiveContainer } from './src/utils/markdown.ts';
+import { parseDirectiveNode } from './src/plugins/remark-directive-rehype.ts';
+import { createAdmonitionComponent } from './src/plugins/rehype-component-admonition.ts';
 
 export default defineConfig({
   output: 'static',
   site: siteConfig.siteUrl,
   integrations: [icon()],
   markdown: {
-    remarkPlugins: [remarkDirective, remarkDirectiveContainer],
+    remarkPlugins: [remarkDirective, parseDirectiveNode],
+    rehypePlugins: [
+      [
+        rehypeComponents,
+        {
+          components: {
+            note: createAdmonitionComponent('note'),
+            tip: createAdmonitionComponent('tip'),
+            important: createAdmonitionComponent('important'),
+            caution: createAdmonitionComponent('caution'),
+            warning: createAdmonitionComponent('warning'),
+          },
+        },
+      ],
+    ],
   },
 });

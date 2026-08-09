@@ -6,7 +6,7 @@ import ResourceCard from '@/components/layout/ResourceCard.astro';
 import { getPosts, getResources } from '@/utils/content';
 import { friendLinks } from '@/config/friendLinks';
 
-const posts = await getPosts();
+const posts = await getPosts({ pinnedFirst: false });
 const resources = await getResources();
 const latestPosts = posts.slice(0, 3);
 const latestResources = resources.slice(0, 3);
