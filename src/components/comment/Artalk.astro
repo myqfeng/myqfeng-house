@@ -4,17 +4,18 @@ import { siteConfig } from '@/config/site';
 
 interface Props {
   pageKey: string;
+  pageTitle?: string;
 }
 
-const { pageKey } = Astro.props;
+const { pageKey, pageTitle = '' } = Astro.props;
 const config = {
   ...(commentConfig.artalk ?? {}),
   el: '#artalk',
   site: siteConfig.title,
   pageKey,
   dark: 'html.dark',
-  pageTitle: '',
-  ...(commentConfig.artalk?.visitorCount ? { pageview: true } : {}),
+  pageTitle,
+  ...(commentConfig.artalk?.visitorCount ? { pageview: true, pvEl: '#artalk-pv' } : {}),
 };
 ---
 

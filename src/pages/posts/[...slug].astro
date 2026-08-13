@@ -1,9 +1,11 @@
 ---
 import { getCollection, render } from 'astro:content';
+import { Icon } from 'astro-icon/components';
 import BaseLayout from '@/components/layout/BaseLayout.astro';
 import PageHeader from '@/components/layout/PageHeader.astro';
 import Comment from '@/components/comment/Comment.astro';
 import TocSidebar from '@/components/features/TocSidebar.astro';
+import { commentConfig } from '@/config/commentConfig';
 import { getTypeName } from '@/utils/content';
 import { formatDate } from '@/utils/format';
 
@@ -18,7 +20,8 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 const { Content, headings } = await render(post);
 const typeName = getTypeName(post.data.type);
-const metaText = typeName ? `${typeName} · ${formatDate(post.data.published)}` : formatDate(post.data.published);
+const metaText = [post.data.author, typeName, formatDate(post.data.published)].filter(Boolean).join(' · ');
+const showPV = commentConfig.type === 'artalk' && !!commentConfig.artalk?.visitorCount;
 ---
 
 <BaseLayout title={post.data.title} description={post.data.description}>
@@ -27,7 +30,14 @@ const metaText = typeName ? `${typeName} · ${formatDate(post.data.published)}` 
       <TocSidebar headings={headings} />
 
       <article class="mx-auto max-w-3xl min-w-0">
-        <PageHeader title={post.data.title} description={post.data.description} meta={metaText} tags={post.data.tags} />
+        <PageHeader title={post.data.title} description={post.data.description} meta={metaText} tags={post.data.tags}>
+          {showPV && (
+            <p class="flex items-center gap-1.5 text-sm text-moon-300">
+              <Icon name="lucide:eye" class="h-4 w-4 text-sky-glow" aria-hidden="true" />
+              <span>阅读 <span id="artalk-pv" class="text-sky-glow">--</span> 次</span>
+            </p>
+          )}
+        </PageHeader>
 
     {post.data.source !== 'original' && (
       <div class="mb-8 rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 text-sm text-amber-200">

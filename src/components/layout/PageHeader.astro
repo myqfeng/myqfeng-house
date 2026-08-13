@@ -9,6 +9,7 @@ interface Props {
 }
 
 const { title, description, eyebrow, meta, tags = [], center = false } = Astro.props;
+const hasSlot = Astro.slots.has('default');
 ---
 
 <header class={`page-header ${center ? 'items-center text-center' : ''} mb-10`}>
@@ -19,7 +20,16 @@ const { title, description, eyebrow, meta, tags = [], center = false } = Astro.p
   )}
   <h1 class="page-header-title text-3xl font-bold text-moon-50 md:text-4xl">{title}</h1>
   {description && <p class="page-header-desc mt-3 text-lg text-moon-300">{description}</p>}
-  {meta && <p class="page-header-meta mt-3 text-sm text-sky-glow">{meta}</p>}
+  {(meta || hasSlot) && (
+    <div class="page-header-meta-row mt-3 flex flex-wrap items-center gap-x-3 gap-y-1">
+      {meta && <p class="page-header-meta text-sm text-sky-glow">{meta}</p>}
+      {hasSlot && (
+        <div class={`page-header-slot ${meta ? 'border-l border-moon-500 pl-3' : ''}`}>
+          <slot />
+        </div>
+      )}
+    </div>
+  )}
   {tags.length > 0 && (
     <div class="page-header-tags mt-4 flex flex-wrap gap-2">
       {tags.map((tag) => (
@@ -42,10 +52,13 @@ const { title, description, eyebrow, meta, tags = [], center = false } = Astro.p
     opacity: 0;
     animation: fade-up 0.8s 0.2s forwards;
   }
-  .page-header-desc,
-  .page-header-meta {
+  .page-header-desc {
     opacity: 0;
     animation: fade-up 0.8s 0.35s forwards;
+  }
+  .page-header-meta-row {
+    opacity: 0;
+    animation: fade-up 0.8s 0.4s forwards;
   }
   .page-header-tags {
     opacity: 0;
@@ -55,7 +68,7 @@ const { title, description, eyebrow, meta, tags = [], center = false } = Astro.p
     .page-header-eyebrow,
     .page-header-title,
     .page-header-desc,
-    .page-header-meta,
+    .page-header-meta-row,
     .page-header-tags {
       opacity: 1;
       animation: none;

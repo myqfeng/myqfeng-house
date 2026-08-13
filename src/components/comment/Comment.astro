@@ -25,7 +25,7 @@ const pageKey = customPath ?? (post ? `/posts/${slug}` : '/');
           <h2 class="text-xl font-bold text-moon-50">评论区</h2>
         </div>
         <div class="pl-1 pr-1">
-          {commentConfig.type === 'artalk' && <Artalk pageKey={pageKey} />}
+          {commentConfig.type === 'artalk' && <Artalk pageKey={pageKey} pageTitle={post?.data.title ?? ''} />}
           {commentConfig.type === 'giscus' && <Giscus />}
         </div>
       </div>
