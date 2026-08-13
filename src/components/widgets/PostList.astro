@@ -15,7 +15,7 @@ const inserted = new Set<string>();
 ---
 
 <div class="columns-1 gap-6 md:columns-2 lg:columns-3">
-  {posts.map((post, index) => {
+  {posts.map((post) => {
     const main = getMainType(post.data.type);
     const subs = subTypesByParent[main];
     const shouldInsert = subs && !inserted.has(main);
@@ -23,12 +23,11 @@ const inserted = new Set<string>();
     return (
       <Fragment>
         {shouldInsert &&
-          subs.map((sub, i) => {
+          subs.map((sub) => {
             const typeInfo = getPostTypeById(main);
             return (
               <div
                 class="reveal mb-6 break-inside-avoid"
-                style={`--reveal-delay: ${index * 60 + i * 30}ms`}
                 data-type={sub.type}
                 data-sub-card
                 data-searchable={`${sub.name} ${typeInfo?.name ?? ''}`}
@@ -37,7 +36,7 @@ const inserted = new Set<string>();
               </div>
             );
           })}
-        <div class="reveal mb-6 break-inside-avoid" style={`--reveal-delay: ${index * 60}ms`} data-type={post.data.type} data-searchable={`${post.data.title} ${post.data.description} ${post.data.tags.join(' ')}`}>
+        <div class="reveal mb-6 break-inside-avoid" data-type={post.data.type} data-searchable={`${post.data.title} ${post.data.description} ${post.data.tags.join(' ')}`}>
           <PostCard post={post} />
         </div>
       </Fragment>

@@ -1,10 +1,16 @@
 import { getCollection } from 'astro:content';
 import { postTypes, getPostTypeById } from '@/config/postConfig';
 
-function sortContent<T extends { data: { pinned?: boolean; published: Date } }>(items: T[]) {
+function compareByPublishedDesc<T extends { id: string; data: { published: Date } }>(a: T, b: T) {
+  const diff = b.data.published.valueOf() - a.data.published.valueOf();
+  if (diff !== 0) return diff;
+  return a.id.localeCompare(b.id, undefined, { numeric: true });
+}
+
+function sortContent<T extends { id: string; data: { pinned?: boolean; published: Date } }>(items: T[]) {
   return items.sort((a, b) => {
     if (a.data.pinned !== b.data.pinned) return a.data.pinned ? -1 : 1;
-    return b.data.published.valueOf() - a.data.published.valueOf();
+    return compareByPublishedDesc(a, b);
   });
 }
 
@@ -49,7 +55,7 @@ export async function getPosts(options: { pinnedFirst?: boolean } = {}) {
   const posts = await getCollection('posts');
   const list = posts.filter((p) => !p.data.draft);
   if (!pinnedFirst) {
-    return list.sort((a, b) => b.data.published.valueOf() - a.data.published.valueOf());
+    return list.sort(compareByPublishedDesc);
   }
   return sortContent(list);
 }
