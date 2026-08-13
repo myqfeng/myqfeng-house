@@ -18,7 +18,7 @@ export const siteConfig: SiteConfig = {
   favicon: ['/favicon.svg'],
 
   // 公告（显示在首页 Hero 顶部，留空则不显示）
-  announcement: '欢迎来到明月清风的学习空间',
+  announcement: '本站在 [github.com/myqfeng/myqfeng-house](https://github.com/myqfeng/myqfeng-house) 上开源，求个 Star 喵~',
 
   // ── 导航栏 ────────────────────────────────────
   navLinks: [
